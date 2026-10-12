@@ -3,98 +3,47 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#101b2d">
 <title>WorldRise | Open World</title>
 
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;overflow:hidden;background:#9cc9e8;
-  font-family:Arial,sans-serif;color:white
-}
+body{margin:0;overflow:hidden;background:#9cc9e8;font-family:Arial,sans-serif;color:white;touch-action:none}
 #game{position:fixed;inset:0}
 #hud{position:fixed;inset:0;pointer-events:none}
-.panel{
-  background:#101b2ddd;border:1px solid #ffffff35;
-  border-radius:14px;padding:11px 15px;
-  backdrop-filter:blur(8px)
-}
+.panel{background:#101b2ddd;border:1px solid #ffffff35;border-radius:14px;padding:11px 15px;backdrop-filter:blur(8px)}
 #brand{position:absolute;top:14px;left:14px}
 #brand strong{font-size:22px;color:#a6f0d0}
 #stats{position:absolute;top:14px;right:14px;line-height:1.9}
-#help{
-  position:absolute;bottom:14px;left:50%;
-  transform:translateX(-50%);width:max-content;
-  max-width:94%;text-align:center;font-size:12px
-}
-#message{
-  position:absolute;top:110px;left:50%;
-  transform:translateX(-50%);background:#101b2dee;
-  padding:12px 18px;border-radius:12px;
-  display:none;text-align:center;max-width:90%;
-  width:max-content
-}
-#start{
-  position:fixed;inset:0;z-index:5;display:grid;
-  place-items:center;
-  background:linear-gradient(#09182cbb,#09182cee);
-  padding:18px
-}
-.card{
-  max-width:500px;width:100%;text-align:center;
-  padding:30px 22px;border:1px solid #ffffff35;
-  border-radius:24px;background:#101b2df5
-}
+#help{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);width:max-content;max-width:94%;text-align:center;font-size:12px}
+#message{position:absolute;top:110px;left:50%;transform:translateX(-50%);background:#101b2dee;padding:12px 18px;border-radius:12px;display:none;text-align:center;max-width:90%;width:max-content}
+#start{position:fixed;inset:0;z-index:5;display:grid;place-items:center;background:linear-gradient(#09182cbb,#09182cee);padding:18px}
+.card{max-width:500px;width:100%;text-align:center;padding:30px 22px;border:1px solid #ffffff35;border-radius:24px;background:#101b2df5}
 h1{font-size:clamp(40px,9vw,66px);margin:0;color:#a6f0d0}
 .card p{line-height:1.9;color:#dce8f5}
-button{
-  border:0;border-radius:12px;padding:13px 20px;
-  font-size:15px;font-weight:bold;cursor:pointer;
-  background:#8ce5c0;color:#102c29
-}
-#controls{
-  position:fixed;bottom:85px;left:15px;
-  display:flex;gap:10px;pointer-events:auto;
-  direction:ltr;align-items:end
-}
-.pad{
-  display:grid;grid-template-columns:repeat(3,45px);
-  grid-template-rows:repeat(2,45px);gap:4px
-}
-.pad button,.action{
-  padding:0;background:#102238d9;color:white;
-  border:1px solid #ffffff60;touch-action:none;
-  user-select:none;-webkit-user-select:none
-}
+button{border:0;border-radius:12px;padding:13px 20px;font-size:15px;font-weight:bold;cursor:pointer;background:#8ce5c0;color:#102c29}
+#controls{position:fixed;bottom:85px;left:15px;display:flex;gap:10px;pointer-events:auto;direction:ltr;align-items:end}
+.pad{display:grid;grid-template-columns:repeat(3,45px);grid-template-rows:repeat(2,45px);gap:4px}
+.pad button,.action{padding:0;background:#102238d9;color:white;border:1px solid #ffffff60;touch-action:none;user-select:none;-webkit-user-select:none}
 .pad span{pointer-events:none}
 #actions{display:flex;flex-direction:column;gap:7px}
 .action{width:55px;height:43px;border-radius:13px;font-size:12px}
-#loading{
-  position:fixed;z-index:4;top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  background:#101b2dee;padding:14px 20px;
-  border-radius:14px;text-align:center;
-  display:none;max-width:90%;pointer-events:none
-}
+#loading{position:fixed;z-index:4;top:50%;left:50%;transform:translate(-50%,-50%);background:#101b2dee;padding:14px 20px;border-radius:14px;text-align:center;display:none;max-width:90%;pointer-events:none}
 @media(max-width:600px){
-  .panel{padding:8px 10px}
-  #brand{top:8px;left:8px}
-  #brand strong{font-size:18px}
-  #stats{top:8px;right:8px;font-size:12px}
-  #help{bottom:7px;font-size:10px}
-  #controls{bottom:60px;left:8px;gap:5px}
-  .pad{grid-template-columns:repeat(3,40px);grid-template-rows:repeat(2,40px)}
-  .action{width:48px;height:39px;font-size:10px}
+.panel{padding:8px 10px}#brand{top:8px;left:8px}#brand strong{font-size:18px}
+#stats{top:8px;right:8px;font-size:12px}#help{bottom:7px;font-size:10px}
+#controls{bottom:60px;left:8px;gap:5px}
+.pad{grid-template-columns:repeat(3,40px);grid-template-rows:repeat(2,40px)}
+.action{width:48px;height:39px;font-size:10px}
 }
 </style>
 
-<!-- استيراد Three.js وإضافاته -->
 <script type="importmap">
 {
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  "imports":{
+    "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
   }
 }
 </script>
@@ -106,17 +55,14 @@ button{
 <div id="hud">
   <div id="brand" class="panel">
     <strong>WorldRise</strong><br>
-    <small>OPEN WORLD • HUMAN ANIMATION</small>
+    <small>OPEN WORLD • CITY UPDATE</small>
   </div>
-
   <div id="stats" class="panel">
     <div>💰 الرصيد: <b id="money">1000</b>$</div>
     <div>🎮 الوضع: <b id="mode">استكشاف</b></div>
     <div>👤 الشخصية: <b id="characterStatus">جارٍ التحميل...</b></div>
   </div>
-
   <div id="message"></div>
-
   <div id="help" class="panel">
     W/S للحركة • A/D للدوران • Shift للجري • Space للقفز • E للسيارة
   </div>
@@ -127,15 +73,11 @@ button{
 <div id="start">
   <div class="card">
     <h1>WorldRise</h1>
-    <p>
-      أهلًا بك في عالمك المفتوح!<br>
-      استكشف المدينة بشخصية ثلاثية الأبعاد، وجرّب المشي والجري والقفز وقيادة السيارة.
-    </p>
+    <p>أهلًا بك في عالمك المفتوح!<br>
+    استكشف مدينة أكبر، وشوارع وأرصفة وإشارات مرور، وجرّب قيادة السيارة.</p>
     <p id="modelInfo">يتم تجهيز الشخصية والحركات...</p>
     <button id="play">ابدأ اللعب</button>
-    <p style="font-size:12px">
-      للحصول على الشخصية المتحركة، يجب أن يتوفر اتصال بالإنترنت.
-    </p>
+    <p style="font-size:12px">يلزم اتصال بالإنترنت لتحميل الشخصية ثلاثية الأبعاد.</p>
   </div>
 </div>
 
@@ -153,184 +95,348 @@ button{
 
 <script type="module">
 import * as THREE from "three";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js";
 
 (function(){
 "use strict";
 
-const game=document.getElementById("game");
-const startScreen=document.getElementById("start");
-const message=document.getElementById("message");
-const moneyLabel=document.getElementById("money");
-const modeLabel=document.getElementById("mode");
-const characterStatus=document.getElementById("characterStatus");
-const modelInfo=document.getElementById("modelInfo");
-const loading=document.getElementById("loading");
+const $=id=>document.getElementById(id);
+const game=$("game"),startScreen=$("start"),message=$("message");
+const moneyLabel=$("money"),modeLabel=$("mode");
+const characterStatus=$("characterStatus"),modelInfo=$("modelInfo");
+const loading=$("loading");
 
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x9cc9e8);
-scene.fog=new THREE.Fog(0x9cc9e8,100,300);
+scene.fog=new THREE.Fog(0x9cc9e8,150,430);
 
-const camera=new THREE.PerspectiveCamera(
-  65,innerWidth/innerHeight,.1,500
-);
-
+const camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,700);
 const renderer=new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(innerWidth,innerHeight);
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
 renderer.shadowMap.enabled=true;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.15;
 game.appendChild(renderer.domElement);
 
-scene.add(new THREE.HemisphereLight(0xdceeff,0x536047,2));
+scene.add(new THREE.HemisphereLight(0xdceeff,0x586044,2.1));
 
-const sun=new THREE.DirectionalLight(0xfff0d5,2.5);
-sun.position.set(-50,90,40);
+const sun=new THREE.DirectionalLight(0xffefcf,2.6);
+sun.position.set(-55,100,45);
 sun.castShadow=true;
-sun.shadow.mapSize.set(1024,1024);
+sun.shadow.mapSize.set(1536,1536);
+sun.shadow.camera.left=-100;
+sun.shadow.camera.right=100;
+sun.shadow.camera.top=100;
+sun.shadow.camera.bottom=-100;
 scene.add(sun);
 
-function material(color,roughness=.9){
-  return new THREE.MeshStandardMaterial({color,roughness});
+function mat(color,roughness=.88,metalness=0){
+  return new THREE.MeshStandardMaterial({color,roughness,metalness});
 }
-
-function box(parent,x,y,z,w,h,d,mat,shadow=true){
-  const mesh=new THREE.Mesh(
-    new THREE.BoxGeometry(w,h,d),mat
-  );
+function box(parent,x,y,z,w,h,d,material,shadow=true){
+  const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
   mesh.position.set(x,y,z);
   mesh.castShadow=shadow;
   mesh.receiveShadow=true;
   parent.add(mesh);
   return mesh;
 }
-
-// ==================== المدينة ====================
-
-box(scene,0,-.6,0,400,1,400,material(0x648b58),false);
-
-const roadMat=material(0x303943);
-const lineMat=material(0xf0f1e8);
-
-for(let i=-3;i<=3;i++){
-  const p=i*35;
-  box(scene,p,.02,0,12,.08,400,roadMat,false);
-  box(scene,0,.025,p,400,.08,12,roadMat,false);
-
-  for(let z=-185;z<200;z+=18){
-    box(scene,p,.08,z,.18,.025,7,lineMat,false);
-  }
-  for(let x=-185;x<200;x+=18){
-    box(scene,x,.08,p,7,.025,.18,lineMat,false);
-  }
+function cylinder(parent,x,y,z,r1,r2,h,material,segments=10){
+  const mesh=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,segments),material);
+  mesh.position.set(x,y,z);
+  mesh.castShadow=true;
+  parent.add(mesh);
+  return mesh;
 }
 
-// مبانٍ مع حدود التصادم
-const buildingObstacles=[];
-const buildingColors=[
-  0xb8c4ce,0xd4c4a9,0x929eae,
-  0xe1ded5,0x9eb6bd,0xb7a9a0
-];
-
 let seed=98217;
-
 function random(){
   seed=(seed*1664525+1013904223)>>>0;
   return seed/4294967296;
 }
+function range(a,b){return a+random()*(b-a)}
 
-for(let gx=-3;gx<3;gx++){
-  for(let gz=-3;gz<3;gz++){
+// ================== الأرض والشوارع ==================
+
+box(scene,0,-.7,0,650,1,650,mat(0x71935d),false);
+
+const road=mat(0x30343a);
+const roadEdge=mat(0x20252b);
+const sidewalk=mat(0xb8b8ad);
+const sidewalkLight=mat(0xd2d0c5);
+const whiteLine=mat(0xf4f0dd);
+const yellowLine=mat(0xf1c84c);
+const crosswalkMat=mat(0xf4f3e9);
+const drainMat=mat(0x454a4d);
+
+// كل شارع يمر عند مضاعفات 35
+const roadCenters=[];
+for(let i=-5;i<=5;i++)roadCenters.push(i*35);
+
+for(const p of roadCenters){
+  // شارع طولي
+  box(scene,p,-.04,0,14,.16,650,road,false);
+  box(scene,p-7.12,.015,0,.22,.19,650,roadEdge,false);
+  box(scene,p+7.12,.015,0,.22,.19,650,roadEdge,false);
+
+  // شارع عرضي
+  box(scene,0,-.04,p,650,.16,14,road,false);
+  box(scene,0,.015,p-7.12,650,.19,.22,roadEdge,false);
+  box(scene,0,.015,p+7.12,650,.19,.22,roadEdge,false);
+
+  // خطوط منتصف متقطعة
+  for(let q=-320;q<=320;q+=13){
+    if(Math.abs(q%35)<8)continue;
+    box(scene,p,.055,q,.16,.025,5.5,yellowLine,false);
+    box(scene,q,.055,p,5.5,.025,.16,yellowLine,false);
+  }
+
+  // خطوط تقسيم المسارات
+  box(scene,p-3.2,.05,0,.09,.02,650,whiteLine,false);
+  box(scene,p+3.2,.05,0,.09,.02,650,whiteLine,false);
+  box(scene,0,.05,p-3.2,650,.02,.09,whiteLine,false);
+  box(scene,0,.05,p+3.2,650,.02,.09,whiteLine,false);
+
+  // أرصفة متصلة على جانبي الطرق
+  for(const side of [-1,1]){
+    box(scene,p+side*8.1,.03,0,2.1,.28,650,sidewalk,false);
+    box(scene,0,.03,p+side*8.1,650,.28,2.1,sidewalk,false);
+    box(scene,p+side*7.25,.12,0,.12,.12,650,sidewalkLight,false);
+    box(scene,0,.12,p+side*7.25,650,.12,.12,sidewalkLight,false);
+  }
+}
+
+// ممرات المشاة عند التقاطعات
+for(const x of roadCenters){
+  for(const z of roadCenters){
+    for(let n=0;n<7;n++){
+      const offset=-4.5+n*1.5;
+      box(scene,x+offset,.065,z-8.9,1.05,.035,.9,crosswalkMat,false);
+      box(scene,x+offset,.065,z+8.9,1.05,.035,.9,crosswalkMat,false);
+      box(scene,x-8.9,.065,z+offset,.9,.035,1.05,crosswalkMat,false);
+      box(scene,x+8.9,.065,z+offset,.9,.035,1.05,crosswalkMat,false);
+    }
+
+    // فتحات تصريف صغيرة قرب الأرصفة
+    for(const side of [-1,1]){
+      box(scene,x+side*6.25,.075,z+10,.5,.025,1.1,drainMat,false);
+      box(scene,x+10,.075,z+side*6.25,1.1,.025,.5,drainMat,false);
+    }
+  }
+}
+
+// ================== مبانٍ وواجهات ==================
+
+const buildingObstacles=[];
+const buildingColors=[
+  0xbec5cc,0xd8c8b2,0x929eae,0xe4e0d7,
+  0x9fb8bf,0xc3b2a6,0xc8d0c9,0xb9c3d3
+];
+const glass= new THREE.MeshStandardMaterial({
+  color:0x83b9cf,metalness:.3,roughness:.24
+});
+const darkGlass=new THREE.MeshStandardMaterial({
+  color:0x304e60,metalness:.35,roughness:.2
+});
+const balconyMat=mat(0x666e76,.7);
+const roofMat=mat(0x60666a);
+
+for(let gx=-5;gx<5;gx++){
+  for(let gz=-5;gz<5;gz++){
     const cx=(gx+.5)*35;
     const cz=(gz+.5)*35;
 
-    if(Math.abs(cx)<27&&Math.abs(cz)<27)continue;
+    // ثلاثة مبانٍ في كل صف، مع ترك مساحة قرب الشوارع
+    for(let j=-1;j<=1;j++){
+      for(let k=-1;k<=1;k++){
+        const x=cx+j*7.5+range(-.45,.45);
+        const z=cz+k*7.5+range(-.45,.45);
+        const w=range(4.4,5.8);
+        const d=range(4.4,5.8);
+        const h=range(8,32);
+        const floors=Math.max(2,Math.floor(h/3));
+        const wallMat=mat(buildingColors[Math.floor(random()*buildingColors.length)]);
+        const building=new THREE.Group();
+        building.position.set(x,0,z);
+        scene.add(building);
 
-    for(let j=0;j<3;j++){
-      for(let k=0;k<3;k++){
-        const x=cx+(j-1)*8.5+(random()-.5)*2;
-        const z=cz+(k-1)*8.5+(random()-.5)*2;
-        const w=5+random()*2;
-        const d=5+random()*2;
-        const h=7+random()*28;
+        box(building,0,h/2,0,w,h,d,wallMat);
+        box(building,0,h+.12,0,w+.25,.25,d+.25,roofMat,false);
 
-        box(
-          scene,x,h/2,z,w,h,d,
-          material(buildingColors[
-            Math.floor(random()*buildingColors.length)
-          ])
-        );
+        // واجهات النوافذ على الجوانب الأربعة
+        for(let floor=0;floor<floors;floor++){
+          const wy=1.6+floor*2.7;
+          if(wy>h-1)continue;
 
-        buildingObstacles.push({
-          minX:x-w/2,maxX:x+w/2,
-          minZ:z-d/2,maxZ:z+d/2
-        });
+          const count=Math.max(2,Math.floor(w/1.35));
+          for(let n=0;n<count;n++){
+            const wx=-w/2+(n+.5)*w/count;
+            const windowMat=random()<.25?darkGlass:glass;
+            box(building,wx,wy,d/2+.025,w/count*.56,1.05,.045,windowMat,false);
+            box(building,wx,wy,-d/2-.025,w/count*.56,1.05,.045,windowMat,false);
+          }
 
-        const glassMat=new THREE.MeshStandardMaterial({
-          color:0x8bc8dd,metalness:.25,roughness:.22
-        });
+          const sideCount=Math.max(2,Math.floor(d/1.35));
+          for(let n=0;n<sideCount;n++){
+            const wz=-d/2+(n+.5)*d/sideCount;
+            box(building,w/2+.025,wy,wz,.045,1.05,d/sideCount*.56,glass,false);
+            box(building,-w/2-.025,wy,wz,.045,1.05,d/sideCount*.56,glass,false);
+          }
 
-        for(let row=1;row<Math.floor(h/3);row++){
-          for(let side=-1;side<=1;side++){
-            if(random()<.3)continue;
-
-            box(
-              scene,x+side*w*.25,row*3,z+d/2+.02,
-              w*.12,.85,.04,glassMat,false
-            );
-
-            box(
-              scene,x+w/2+.02,row*3,z+side*d*.25,
-              .04,.85,d*.12,glassMat,false
-            );
+          // شرفات صغيرة لبعض المباني
+          if(random()<.28&&wy<h-1){
+            box(building,0,wy-.45,d/2+.32,w*.65,.12,.65,balconyMat,false);
           }
         }
+
+        // مدخل المبنى
+        box(building,0,1.05,d/2+.04,.95,2.1,.08,darkGlass,false);
+        box(building,0,2.2,d/2+.09,1.2,.12,.12,sidewalkLight,false);
+
+        // وحدة تكييف على الجدار
+        if(random()<.65){
+          box(building,w/2+.12,h*.45,0,.3,.55,.7,mat(0x777f83),false);
+        }
+
+        buildingObstacles.push({
+          minX:x-w/2-.2,maxX:x+w/2+.2,
+          minZ:z-d/2-.2,maxZ:z+d/2+.2
+        });
       }
     }
   }
 }
 
-// أشجار
-const trunkMat=material(0x72503a);
-const leafMat=material(0x357b4d);
+// ================== الأشجار على الأرصفة ==================
 
-for(let i=-8;i<=8;i++){
-  for(const side of [-1,1]){
-    const x=i*20,z=side*10;
-    if(Math.abs(x)<30)continue;
+const trunkMat=mat(0x65462e);
+const leafMats=[mat(0x347448),mat(0x477f42),mat(0x2f693d)];
+const planterMat=mat(0x858a83);
 
-    box(scene,x,1.1,z,.65,2.2,.65,trunkMat);
+for(let roadIndex=-4;roadIndex<=4;roadIndex++){
+  const p=roadIndex*35;
 
-    const crown=new THREE.Mesh(
-      new THREE.SphereGeometry(2.3,7,6),leafMat
-    );
-    crown.position.set(x,3.5,z);
-    crown.castShadow=true;
-    scene.add(crown);
+  for(let q=-150;q<=150;q+=14){
+    if(Math.abs(q%35)<11)continue;
+
+    for(const side of [-1,1]){
+      // أشجار على جانبي الشوارع الطولية
+      const x=p+side*9.15;
+      const z=q+range(-1,1);
+      box(scene,x,.22,z,1.35,.35,1.35,planterMat,false);
+      cylinder(scene,x,1.25,z,.18,.25,2.1,trunkMat,8);
+
+      const crown=new THREE.Mesh(
+        new THREE.SphereGeometry(1.15,8,7),
+        leafMats[Math.floor(random()*leafMats.length)]
+      );
+      crown.position.set(x,2.8,z);
+      crown.castShadow=true;
+      scene.add(crown);
+
+      // أشجار على جانبي الشوارع العرضية
+      const x2=q+range(-1,1);
+      const z2=p+side*9.15;
+      box(scene,x2,.22,z2,1.35,.35,1.35,planterMat,false);
+      cylinder(scene,x2,1.25,z2,.18,.25,2.1,trunkMat,8);
+
+      const crown2=new THREE.Mesh(
+        new THREE.SphereGeometry(1.15,8,7),
+        leafMats[Math.floor(random()*leafMats.length)]
+      );
+      crown2.position.set(x2,2.8,z2);
+      crown2.castShadow=true;
+      scene.add(crown2);
+    }
   }
 }
 
-// ==================== السيارة ====================
+// ================== أعمدة إنارة ==================
 
-function makeCar(){
+const poleMat=mat(0x4b545b,.6,.35);
+const lampMat=new THREE.MeshStandardMaterial({
+  color:0xfff0c3,emissive:0xffd87b,emissiveIntensity:.7
+});
+
+function makeStreetLamp(x,z,rotation=0){
+  const group=new THREE.Group();
+  group.position.set(x,0,z);
+  group.rotation.y=rotation;
+  scene.add(group);
+
+  cylinder(group,0,2.5,0,.09,.13,5,poleMat,8);
+  box(group,.48,4.85,0,1.1,.12,.12,poleMat,false);
+  box(group,1,4.7,0,.55,.18,.42,lampMat,false);
+  box(group,1,4.57,0,.4,.035,.3,lampMat,false);
+}
+
+for(let p=-140;p<=140;p+=35){
+  for(let q=-140;q<=140;q+=35){
+    makeStreetLamp(p+9.4,q+10,0);
+    makeStreetLamp(p-9.4,q-10,Math.PI);
+  }
+}
+
+// ================== إشارات المرور ==================
+
+const signalBlack=mat(0x20262b);
+const redLight=mat(0xff302d,.35);
+const amberLight=mat(0xffc447,.35);
+const greenLight=mat(0x38e879,.35);
+
+function makeTrafficLight(x,z,rotation=0){
+  const g=new THREE.Group();
+  g.position.set(x,0,z);
+  g.rotation.y=rotation;
+  scene.add(g);
+
+  cylinder(g,0,1.55,0,.08,.1,3.1,poleMat,8);
+  box(g,0,3.15,0,.55,1.35,.42,signalBlack,false);
+  const lights=[
+    {y:3.55,m:redLight},
+    {y:3.15,m:amberLight},
+    {y:2.75,m:greenLight}
+  ];
+  for(const l of lights){
+    const bulb=new THREE.Mesh(new THREE.SphereGeometry(.13,10,8),l.m);
+    bulb.position.set(0,l.y,.23);
+    g.add(bulb);
+  }
+}
+
+for(const p of [-105,-70,-35,0,35,70,105]){
+  makeTrafficLight(p+9, p-9,Math.PI/2);
+  makeTrafficLight(p-9,p+9,-Math.PI/2);
+}
+
+// ================== سيارات إضافية متوقفة ==================
+
+const carPaints=[0x2c75bd,0xe8e7df,0x292f38,0x38a27d,0xb84a42,0xd3b94d];
+const tireMat=mat(0x17191d);
+const windowMat=new THREE.MeshStandardMaterial({
+  color:0x7098a8,metalness:.25,roughness:.22
+});
+
+function makeCar(color=0xd94343){
   const car=new THREE.Group();
+  const bodyMat=mat(color,.38,.22);
 
-  box(car,0,.65,0,2.1,.8,4,material(0xd94343));
-  box(car,0,1.25,-.25,1.65,.8,2.1,
-    new THREE.MeshStandardMaterial({
-      color:0x8bc8dd,metalness:.25,roughness:.22
-    })
-  );
+  box(car,0,.65,0,2.1,.8,4,bodyMat);
+  box(car,0,1.22,-.2,1.62,.72,2.15,windowMat);
+  box(car,0,1.59,-.2,1.7,.09,2.25,bodyMat,false);
 
-  box(car,0,1.25,-.25,1.72,.08,2.2,material(0x343c48));
+  // غطاء المحرك والصندوق
+  box(car,0,.98,1.3,1.85,.18,1.1,bodyMat,false);
+  box(car,0,.98,-1.45,1.85,.18,.85,bodyMat,false);
 
   car.userData.wheels=[];
-
   for(const x of [-1.08,1.08]){
-    for(const z of [-1.25,1.25]){
+    for(const z of [-1.28,1.28]){
       const wheel=new THREE.Mesh(
-        new THREE.CylinderGeometry(.42,.42,.24,16),
-        material(0x17191d)
+        new THREE.CylinderGeometry(.4,.4,.24,14),tireMat
       );
       wheel.rotation.z=Math.PI/2;
       wheel.position.set(x,.4,z);
@@ -339,101 +445,92 @@ function makeCar(){
       car.userData.wheels.push(wheel);
     }
 
-    box(car,x,.72,1.99,.32,.2,.05,material(0xffefbd),false);
-    box(car,x,.72,-2,.32,.2,.05,material(0xf34432),false);
+    box(car,x,.72,2.01,.3,.19,.06,lampMat,false);
+    box(car,x,.72,-2.01,.3,.19,.06,redLight,false);
   }
 
   scene.add(car);
   return car;
 }
 
-const car=makeCar();
+const car=makeCar(0xd94343);
 car.position.set(5,0,5);
 
-// ==================== اللاعب ====================
+const parkedCars=[];
+for(let i=-4;i<=4;i++){
+  for(const side of [-1,1]){
+    const z=i*35+side*11;
+    const x=i*35+12;
+
+    if(Math.abs(x)<20&&Math.abs(z)<20)continue;
+
+    const parked=makeCar(carPaints[Math.floor(random()*carPaints.length)]);
+    parked.position.set(x,0,z);
+    parked.rotation.y=(i%2===0)?0:Math.PI/2;
+    parked.scale.setScalar(.88);
+    parkedCars.push(parked);
+  }
+}
+
+// ================== اللاعب ==================
 
 const player=new THREE.Group();
 scene.add(player);
 player.position.set(0,0,0);
 
-let mixer=null;
-let activeAction=null;
-let modelLoaded=false;
-let fallbackModel=false;
+let mixer=null,activeAction=null,modelLoaded=false,fallbackModel=false;
 const animationActions={};
 
-// نموذج بديل إذا تعذر تحميل الملف الخارجي
 function createFallbackCharacter(){
   const fallback=new THREE.Group();
-  const skin=material(0xd9a078);
-  const shirt=material(0x2456c5);
-  const pants=material(0x252d3a);
-  const hair=material(0x30231e);
+  const skin=mat(0xd9a078),shirt=mat(0x2456c5);
+  const pants=mat(0x252d3a),hair=mat(0x30231e);
 
-  function part(geometry,mat,x,y,z){
-    const mesh=new THREE.Mesh(geometry,mat);
+  function part(geometry,material,x,y,z,parent=fallback){
+    const mesh=new THREE.Mesh(geometry,material);
     mesh.position.set(x,y,z);
     mesh.castShadow=true;
-    fallback.add(mesh);
+    parent.add(mesh);
     return mesh;
   }
 
   part(new THREE.BoxGeometry(.75,.85,.4),shirt,0,1.35,0);
   part(new THREE.SphereGeometry(.28,16,12),skin,0,2.05,0);
-  part(
-    new THREE.SphereGeometry(.285,16,8,0,Math.PI*2,0,Math.PI*.48),
-    hair,0,2.16,0
-  );
+  part(new THREE.SphereGeometry(.285,16,8,0,Math.PI*2,0,Math.PI*.48),hair,0,2.16,0);
 
   const limbs=[];
-
   for(const side of [-1,1]){
     const arm=new THREE.Group();
     arm.position.set(side*.48,1.65,0);
     fallback.add(arm);
-
-    const armMesh=new THREE.Mesh(
-      new THREE.CapsuleGeometry(.12,.5,4,8),shirt
-    );
-    armMesh.position.y=-.3;
-    arm.add(armMesh);
-    limbs.push(arm);
+    part(new THREE.CapsuleGeometry(.12,.5,4,8),shirt,0,-.3,0,arm);
+    limbs.push({part:arm,type:"arm",side});
 
     const leg=new THREE.Group();
     leg.position.set(side*.2,.9,0);
     fallback.add(leg);
-
-    const legMesh=new THREE.Mesh(
-      new THREE.CapsuleGeometry(.15,.45,4,8),pants
-    );
-    legMesh.position.y=-.3;
-    leg.add(legMesh);
-    limbs.push(leg);
+    part(new THREE.CapsuleGeometry(.15,.45,4,8),pants,0,-.3,0,leg);
+    limbs.push({part:leg,type:"leg",side});
   }
 
+  fallback.userData.limbs=limbs;
   player.add(fallback);
   fallbackModel=true;
   characterStatus.textContent="نموذج بديل";
-  modelInfo.textContent="تعذر تحميل النموذج الخارجي؛ ستعمل اللعبة بالشخصية البديلة.";
+  modelInfo.textContent="تعمل اللعبة بالشخصية البديلة.";
 }
 
-// تحميل نموذج بشري مع حركات جاهزة
-// النموذج يحتوي عادةً على حركات مثل Idle وWalk وRun
 const loader=new GLTFLoader();
-
 loading.style.display="block";
 
 loader.load(
   "https://threejs.org/examples/models/gltf/Soldier.glb",
-
   function(gltf){
     const model=gltf.scene;
-
-    // إعداد النموذج ليقف على الأرض
     model.scale.setScalar(1.8);
     model.position.set(0,0,0);
 
-    model.traverse(function(obj){
+    model.traverse(obj=>{
       if(obj.isMesh){
         obj.castShadow=true;
         obj.receiveShadow=true;
@@ -441,25 +538,17 @@ loader.load(
     });
 
     player.add(model);
-
     mixer=new THREE.AnimationMixer(model);
 
-    gltf.animations.forEach(function(clip){
+    gltf.animations.forEach(clip=>{
       const name=clip.name.toLowerCase();
       const action=mixer.clipAction(clip);
-
-      if(name.includes("idle")){
-        animationActions.idle=action;
-      }else if(name.includes("walk")){
-        animationActions.walk=action;
-      }else if(name.includes("run")){
-        animationActions.run=action;
-      }else if(name.includes("jump")){
-        animationActions.jump=action;
-      }
+      if(name.includes("idle"))animationActions.idle=action;
+      else if(name.includes("walk"))animationActions.walk=action;
+      else if(name.includes("run"))animationActions.run=action;
+      else if(name.includes("jump"))animationActions.jump=action;
     });
 
-    // اختيار حركة الوقوف إن كانت موجودة
     if(animationActions.idle){
       activeAction=animationActions.idle;
       activeAction.play();
@@ -470,124 +559,89 @@ loader.load(
 
     modelLoaded=true;
     characterStatus.textContent="جاهزة";
-    modelInfo.textContent="تم تحميل الشخصية والحركات ثلاثية الأبعاد بنجاح.";
+    modelInfo.textContent="تم تحميل الشخصية ثلاثية الأبعاد.";
     loading.style.display="none";
   },
-
   function(progress){
     if(progress.total){
-      const percent=Math.round(progress.loaded/progress.total*100);
-      loading.textContent="جارٍ تحميل الشخصية... "+percent+"%";
+      loading.textContent="جارٍ تحميل الشخصية... "+
+        Math.round(progress.loaded/progress.total*100)+"%";
     }
   },
-
   function(error){
-    console.error("Character model failed to load:",error);
+    console.error("Character model failed:",error);
     loading.style.display="none";
     createFallbackCharacter();
   }
 );
 
-// تبديل حركة الشخصية بسلاسة
 function playAnimation(name,fade=.2){
   if(!mixer||!animationActions[name])return;
   const next=animationActions[name];
-
   if(activeAction===next)return;
-
   next.reset();
   next.enabled=true;
   next.setEffectiveTimeScale(1);
   next.setEffectiveWeight(1);
   next.play();
-
-  if(activeAction){
-    activeAction.crossFadeTo(next,fade,true);
-  }
-
+  if(activeAction)activeAction.crossFadeTo(next,fade,true);
   activeAction=next;
 }
 
-// ==================== المكافأة ====================
+// ================== المكافأة ==================
 
 const reward=new THREE.Group();
-
 const coin=new THREE.Mesh(
-  new THREE.TorusGeometry(1.1,.18,8,24),
-  material(0xffd34e,.3)
+  new THREE.TorusGeometry(1.1,.18,8,24),mat(0xffd34e,.3)
 );
 coin.position.y=2;
 reward.add(coin);
 
 const pillar=new THREE.Mesh(
-  new THREE.CylinderGeometry(.12,.12,2,8),
-  material(0xffd34e)
+  new THREE.CylinderGeometry(.12,.12,2,8),mat(0xffd34e)
 );
 pillar.position.y=1;
 reward.add(pillar);
-
 reward.position.set(-12,0,-12);
 scene.add(reward);
 
-// ==================== تحكم اللعبة ====================
+// ================== التحكم والتصادم ==================
 
-let money=1000;
-let driving=false;
-let started=false;
-let collected=false;
-let messageTimer=null;
-
+let money=1000,driving=false,started=false,collected=false,messageTimer=null;
 const keys={};
-let verticalVelocity=0;
-let onGround=true;
-
-const gravity=22;
-const jumpStrength=8;
-const playerRadius=.7;
+let verticalVelocity=0,onGround=true;
+const gravity=22,jumpStrength=8,playerRadius=.7;
 
 function showMessage(text){
   message.textContent=text;
   message.style.display="block";
   clearTimeout(messageTimer);
-
-  messageTimer=setTimeout(()=>{
-    message.style.display="none";
-  },2500);
+  messageTimer=setTimeout(()=>message.style.display="none",2500);
 }
 
 function isBlocked(x,z,radius=playerRadius){
+  // حدود المباني
   for(const b of buildingObstacles){
-    const closestX=Math.max(b.minX,Math.min(x,b.maxX));
-    const closestZ=Math.max(b.minZ,Math.min(z,b.maxZ));
-    const dx=x-closestX;
-    const dz=z-closestZ;
-
-    if(dx*dx+dz*dz<radius*radius)return true;
+    const cx=Math.max(b.minX,Math.min(x,b.maxX));
+    const cz=Math.max(b.minZ,Math.min(z,b.maxZ));
+    if((x-cx)**2+(z-cz)**2<radius*radius)return true;
   }
-  return false;
+
+  // منع الخروج بعيدًا عن المدينة
+  return Math.abs(x)>310||Math.abs(z)>310;
 }
 
 function movePlayerWithCollision(dx,dz){
-  const nextX=player.position.x+dx;
-  const nextZ=player.position.z+dz;
-
-  if(!isBlocked(nextX,player.position.z)){
-    player.position.x=nextX;
-  }
-
-  if(!isBlocked(player.position.x,nextZ)){
-    player.position.z=nextZ;
-  }
+  const nx=player.position.x+dx,nz=player.position.z+dz;
+  if(!isBlocked(nx,player.position.z))player.position.x=nx;
+  if(!isBlocked(player.position.x,nz))player.position.z=nz;
 }
 
 function jumpPlayer(){
   if(onGround&&!driving&&started){
     verticalVelocity=jumpStrength;
     onGround=false;
-
-    if(animationActions.jump){
-      playAnimation("jump",.1);
-    }
+    if(animationActions.jump)playAnimation("jump",.1);
   }
 }
 
@@ -621,14 +675,13 @@ function toggleVehicle(){
   }
 }
 
-function normalizeKey(event){
-  const codeMap={
+function normalizeKey(e){
+  const map={
     KeyW:"w",KeyA:"a",KeyS:"s",KeyD:"d",KeyE:"e",
     ShiftLeft:"shift",ShiftRight:"shift",Space:"space",
     ArrowUp:"w",ArrowLeft:"a",ArrowDown:"s",ArrowRight:"d"
   };
-
-  return codeMap[event.code]||event.key.toLowerCase();
+  return map[e.code]||e.key.toLowerCase();
 }
 
 function pressKey(key){
@@ -637,71 +690,48 @@ function pressKey(key){
     keys.e=true;
     return;
   }
-
   if(key==="space"){
     if(!keys.space)jumpPlayer();
     keys.space=true;
     return;
   }
-
   keys[key]=true;
 }
+function releaseKey(key){keys[key]=false}
 
-function releaseKey(key){
-  keys[key]=false;
-}
-
-addEventListener("keydown",function(e){
+addEventListener("keydown",e=>{
   const key=normalizeKey(e);
-
-  if(["w","a","s","d","e","shift","space"].includes(key)){
-    e.preventDefault();
-  }
-
+  if(["w","a","s","d","e","shift","space"].includes(key))e.preventDefault();
   pressKey(key);
 });
+addEventListener("keyup",e=>releaseKey(normalizeKey(e)));
 
-addEventListener("keyup",function(e){
-  releaseKey(normalizeKey(e));
-});
-
-// أزرار الهاتف
 document.querySelectorAll("[data-key]").forEach(button=>{
   const key=button.dataset.key;
 
-  button.addEventListener("pointerdown",function(e){
+  button.addEventListener("pointerdown",e=>{
     e.preventDefault();
-
-    if(button.setPointerCapture){
-      try{button.setPointerCapture(e.pointerId)}catch(_){}
-    }
-
+    try{button.setPointerCapture(e.pointerId)}catch(_){}
     pressKey(key);
   });
 
-  function release(e){
+  const release=e=>{
     e.preventDefault();
     releaseKey(key);
-  }
-
+  };
   button.addEventListener("pointerup",release);
   button.addEventListener("pointercancel",release);
-
-  button.addEventListener("lostpointercapture",()=>{
-    releaseKey(key);
-  });
+  button.addEventListener("lostpointercapture",()=>releaseKey(key));
 });
 
-// بدء اللعب
-document.getElementById("play").addEventListener("click",function(){
+$("play").addEventListener("click",()=>{
   started=true;
   startScreen.style.display="none";
   showMessage("مرحبًا بك في WorldRise!");
 });
 
-// ==================== حلقة الرسم ====================
+// ================== حلقة اللعبة ==================
 
-const cameraOffsetY=6;
 let previousTime=performance.now();
 
 function animate(){
@@ -711,67 +741,51 @@ function animate(){
   const dt=Math.min((now-previousTime)/1000,.04);
   previousTime=now;
 
-  if(mixer){
-    mixer.update(dt);
-  }
+  if(mixer)mixer.update(dt);
 
   coin.rotation.y+=dt*1.6;
   reward.position.y=Math.sin(now*.002)*.15;
   reward.rotation.y+=dt*.5;
 
+  // حركة بديلة للشخصية في حال تعذر تحميل النموذج
+  if(fallbackModel&&!driving&&player.children[0]){
+    const fallback=player.children[0];
+    const moving=keys.w||keys.s;
+    const swing=moving?Math.sin(now*.012)*(keys.shift?.75:.45):0;
+    const limbs=fallback.userData.limbs||[];
+    limbs.forEach(limb=>{
+      limb.part.rotation.x=limb.type==="leg"?swing*limb.side:-swing*limb.side*.7;
+    });
+  }
+
   if(started){
     const actor=driving?car:player;
     const movingOnFoot=!driving&&(keys.w||keys.s);
 
-    // اختيار الحركة بحسب الحالة
     if(!driving&&modelLoaded){
-      if(!onGround&&animationActions.jump){
-        playAnimation("jump",.1);
-      }else if(movingOnFoot&&keys.shift){
-        playAnimation("run",.18);
-      }else if(movingOnFoot){
-        playAnimation("walk",.18);
-      }else{
-        playAnimation("idle",.2);
-      }
-    }
-
-    // حركة بديلة بسيطة إذا لم يتم تحميل النموذج
-    if(fallbackModel&&!driving){
-      player.children.forEach(function(child){
-        if(!child.isGroup)return;
-        if(child.children.length===0)return;
-      });
+      if(!onGround&&animationActions.jump)playAnimation("jump",.1);
+      else if(movingOnFoot&&keys.shift)playAnimation("run",.18);
+      else if(movingOnFoot)playAnimation("walk",.18);
+      else playAnimation("idle",.2);
     }
 
     if(driving){
-      let forward=0;
-      let turn=0;
-
+      let forward=0,turn=0;
       if(keys.w)forward+=1;
       if(keys.s)forward-=1;
       if(keys.a)turn+=1;
       if(keys.d)turn-=1;
 
       if(forward!==0){
-        const nextX=car.position.x+
-          Math.sin(car.rotation.y)*forward*dt*15;
-        const nextZ=car.position.z+
-          Math.cos(car.rotation.y)*forward*dt*15;
-
-        if(!isBlocked(nextX,nextZ,1.5)){
-          car.position.x=nextX;
-          car.position.z=nextZ;
+        const nx=car.position.x+Math.sin(car.rotation.y)*forward*dt*15;
+        const nz=car.position.z+Math.cos(car.rotation.y)*forward*dt*15;
+        if(!isBlocked(nx,nz,1.5)){
+          car.position.x=nx;
+          car.position.z=nz;
         }
-
-        car.userData.wheels.forEach(w=>{
-          w.rotation.x+=forward*dt*8;
-        });
+        car.userData.wheels.forEach(w=>w.rotation.x+=forward*dt*8);
       }
-
-      car.rotation.y+=turn*dt*1.8*
-        (forward===0?1:Math.sign(forward));
-
+      car.rotation.y+=turn*dt*1.8*(forward===0?1:Math.sign(forward));
     }else{
       if(keys.a)player.rotation.y+=dt*2.4;
       if(keys.d)player.rotation.y-=dt*2.4;
@@ -782,16 +796,14 @@ function animate(){
 
       if(forward!==0){
         const speed=keys.shift?10:6;
-       const dx=-Math.sin(player.rotation.y)*forward*speed*dt;
-       const dz=-Math.cos(player.rotation.y)*forward*speed*dt;
-       movePlayerWithCollision(dx,dz);
+        const dx=-Math.sin(player.rotation.y)*forward*speed*dt;
+        const dz=-Math.cos(player.rotation.y)*forward*speed*dt;
+        movePlayerWithCollision(dx,dz);
       }
 
-      // الجاذبية والهبوط
       if(!onGround){
         verticalVelocity-=gravity*dt;
         player.position.y+=verticalVelocity*dt;
-
         if(player.position.y<=0){
           player.position.y=0;
           verticalVelocity=0;
@@ -800,7 +812,6 @@ function animate(){
       }
     }
 
-    // جمع المكافأة
     if(!collected&&actor.position.distanceTo(reward.position)<3){
       collected=true;
       scene.remove(reward);
@@ -809,25 +820,15 @@ function animate(){
       showMessage("رائع! حصلت على 1000 دولار افتراضيًا.");
     }
 
-    // كاميرا تتبع الشخصية أو السيارة
     const heading=actor.rotation.y;
-
-    const desiredCameraPosition=new THREE.Vector3(
+    const desired=new THREE.Vector3(
       actor.position.x-Math.sin(heading)*12,
-      actor.position.y+cameraOffsetY,
+      actor.position.y+6,
       actor.position.z-Math.cos(heading)*12
     );
 
-    camera.position.lerp(
-      desiredCameraPosition,
-      1-Math.pow(.001,dt)
-    );
-
-    camera.lookAt(
-      actor.position.x,
-      actor.position.y+1.2,
-      actor.position.z
-    );
+    camera.position.lerp(desired,1-Math.pow(.001,dt));
+    camera.lookAt(actor.position.x,actor.position.y+1.2,actor.position.z);
   }
 
   renderer.render(scene,camera);
@@ -835,7 +836,7 @@ function animate(){
 
 animate();
 
-addEventListener("resize",function(){
+addEventListener("resize",()=>{
   camera.aspect=innerWidth/innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth,innerHeight);
