@@ -782,9 +782,9 @@ function animate(){
 
       if(forward!==0){
         const speed=keys.shift?10:6;
-        const dx=Math.sin(player.rotation.y)*forward*speed*dt;
-        const dz=Math.cos(player.rotation.y)*forward*speed*dt;
-        movePlayerWithCollision(dx,dz);
+       const dx=-Math.sin(player.rotation.y)*forward*speed*dt;
+       const dz=-Math.cos(player.rotation.y)*forward*speed*dt;
+       movePlayerWithCollision(dx,dz);
       }
 
       // الجاذبية والهبوط
