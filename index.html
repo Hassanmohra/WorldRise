@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -190,7 +190,6 @@ renderer.toneMapping=THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure=1.15;
 game.appendChild(renderer.domElement);
 
-// إضاءة خفيفة لتقليل كلفة الرسم
 scene.add(new THREE.HemisphereLight(0xdceeff,0x586044,2.1));
 
 const sun=new THREE.DirectionalLight(0xffefcf,2.1);
@@ -256,7 +255,6 @@ const roadCenters=[];
 for(let i=-5;i<=5;i++)roadCenters.push(i*35);
 
 for(const p of roadCenters){
-  // الشوارع الرئيسية
   box(scene,p,-.04,0,14,.16,650,road);
   box(scene,0,-.04,p,650,.16,14,road);
 
@@ -265,7 +263,6 @@ for(const p of roadCenters){
   box(scene,0,.015,p-7.12,650,.19,.22,roadEdge);
   box(scene,0,.015,p+7.12,650,.19,.22,roadEdge);
 
-  // الخطوط الصفراء المتقطعة
   for(let q=-320;q<=320;q+=22){
     if(Math.abs(q%35)<8)continue;
 
@@ -273,13 +270,11 @@ for(const p of roadCenters){
     box(scene,q,.055,p,5.5,.025,.16,yellowLine);
   }
 
-  // خطوط المسارات
   box(scene,p-3.2,.05,0,.09,.02,650,whiteLine);
   box(scene,p+3.2,.05,0,.09,.02,650,whiteLine);
   box(scene,0,.05,p-3.2,650,.02,.09,whiteLine);
   box(scene,0,.05,p+3.2,650,.02,.09,whiteLine);
 
-  // الأرصفة
   for(const side of [-1,1]){
     box(scene,p+side*8.1,.03,0,2.1,.28,650,sidewalk);
     box(scene,0,.03,p+side*8.1,650,.28,2.1,sidewalk);
@@ -289,7 +284,6 @@ for(const p of roadCenters){
   }
 }
 
-// ممرات المشاة: عدد أخف من العلامات
 for(const x of roadCenters){
   for(const z of roadCenters){
     for(let n=0;n<5;n++){
@@ -309,37 +303,49 @@ for(const x of roadCenters){
 }
 
 // =====================================================
-// المباني والنوافذ
+// المباني والواجهات والمحلات
 // =====================================================
 
 const buildingObstacles=[];
 
 const buildingColors=[
-  0xbec5cc,0xd8c8b2,0x929eae,0xe4e0d7,
-  0x9fb8bf,0xc3b2a6,0xc8d0c9,0xb9c3d3
+  0xd8d0c2,0xe1ded5,0xc4b39c,0xb8c4c8,
+  0xaab7c2,0xd5c7b8,0xaaa9a1,0xe5e0d6
 ];
 
-const glass=mat(0x83b9cf,.3,.2);
-const darkGlass=mat(0x304e60,.35,.1);
-const balconyMat=mat(0x666e76);
-const roofMat=mat(0x60666a);
-const acMat=mat(0x777f83);
+const glass=mat(0x75a9bd,.28,.18);
+const darkGlass=mat(0x263f50,.32,.12);
+const balconyMat=mat(0x6a7176,.55,.12);
+const roofMat=mat(0x666b6c,.8,.05);
+const trimMat=mat(0xf0e9dc,.65,.05);
+const stoneMat=mat(0x8d8273,.9,.02);
+const shopGlass=mat(0x376879,.22,.15);
 
-// نستخدم عددًا أقل من المباني والمجسمات لتناسب الأجهزة القديمة
+const signMats=[
+  mat(0x4f65a8,.55,.05),
+  mat(0x237a68,.55,.05),
+  mat(0x9a5939,.55,.05),
+  mat(0x6e4a8d,.55,.05)
+];
+
+const acMat=mat(0x777f83);
+const tankMat=mat(0x9ba6aa,.75,.05);
+const railingMat=mat(0x3e474d,.6,.15);
+
 for(let gx=-4;gx<4;gx++){
   for(let gz=-4;gz<4;gz++){
     const cx=(gx+.5)*35;
     const cz=(gz+.5)*35;
 
-    // أربعة مبانٍ في كل منطقة بدلًا من تسعة
-    for(let j of [-1,1]){
-      for(let k of [-1,1]){
+    for(const j of [-1,1]){
+      for(const k of [-1,1]){
         const x=cx+j*7.2+range(-.35,.35);
         const z=cz+k*7.2+range(-.35,.35);
         const w=range(4.8,5.8);
         const d=range(4.8,5.8);
         const h=range(9,30);
         const floors=Math.max(2,Math.floor(h/3));
+
         const wallMat=mat(
           buildingColors[Math.floor(random()*buildingColors.length)]
         );
@@ -348,28 +354,107 @@ for(let gx=-4;gx<4;gx++){
         building.position.set(x,0,z);
         scene.add(building);
 
+        // جسم المبنى وحواف السطح
         box(building,0,h/2,0,w,h,d,wallMat);
-        box(building,0,h+.12,0,w+.25,.25,d+.25,roofMat);
+        box(building,0,.42,d/2+.035,w,.82,.09,stoneMat);
+        box(building,0,h+.12,0,w+.32,.24,d+.32,roofMat);
+        box(building,0,h+.28,0,w+.12,.08,d+.12,trimMat);
 
-        // نوافذ أقل عددًا مع الحفاظ على مظهر الواجهات
-        for(let floor=0;floor<floors;floor+=2){
-          const wy=1.6+floor*2.7;
-          if(wy>h-1)continue;
+        // زخرفة معمارية متنوعة
+        if(random()<.55){
+          const sideX=random()<.5?-1:1;
 
-          const count=2;
+          box(
+            building,
+            sideX*(w/2-.22),
+            h/2,
+            d/2+.055,
+            .16,h-.7,.09,
+            trimMat
+          );
+        }else{
+          for(let yy=3.1;yy<h-1;yy+=3.1){
+            box(
+              building,0,yy,d/2+.055,
+              w-.15,.075,.09,
+              trimMat
+            );
+          }
+        }
 
-          for(let n=0;n<count;n++){
-            const wx=-w/2+(n+.5)*w/count;
-            const windowMat=random()<.25?darkGlass:glass;
+        // واجهة المحل الزجاجية ولوحة الواجهة
+        const shopSign=signMats[
+          Math.floor(random()*signMats.length)
+        ];
+
+        box(
+          building,0,1.35,d/2+.075,
+          w*.68,1.75,.09,
+          shopGlass
+        );
+
+        box(
+          building,0,2.42,d/2+.14,
+          w*.76,.34,.16,
+          shopSign
+        );
+
+        box(
+          building,0,.45,d/2+.12,
+          w*.72,.12,.14,
+          balconyMat
+        );
+
+        box(
+          building,-w*.36,1.35,d/2+.14,
+          .09,1.8,.12,
+          trimMat
+        );
+
+        box(
+          building,w*.36,1.35,d/2+.14,
+          .09,1.8,.12,
+          trimMat
+        );
+
+        box(
+          building,0,2.28,d/2+.14,
+          w*.72,.08,.12,
+          trimMat
+        );
+
+        // النوافذ وإطاراتها
+        for(let floor=1;floor<floors;floor++){
+          const wy=1.4+floor*2.7;
+          if(wy>h-1.1)continue;
+
+          for(let n=0;n<2;n++){
+            const wx=-w/2+(n+.5)*w/2;
+            const ww=w/2*.53;
+            const windowMaterial=random()<.22?darkGlass:glass;
 
             box(
-              building,wx,wy,d/2+.025,
-              w/count*.56,1.05,.045,windowMat
+              building,wx,wy,d/2+.045,
+              ww,1.15,.055,
+              windowMaterial
             );
 
             box(
-              building,wx,wy,-d/2-.025,
-              w/count*.56,1.05,.045,windowMat
+              building,wx,wy,-d/2-.045,
+              ww,1.15,.055,
+              windowMaterial
+            );
+
+            box(
+              building,wx,wy+.6,d/2+.08,
+              ww+.12,.09,.07,
+              trimMat
+            );
+
+            box(
+              building,wx,wy-.6,d/2+.08,
+              ww+.12,.09,.07,
+              trimMat
             );
           }
 
@@ -377,30 +462,111 @@ for(let gx=-4;gx<4;gx++){
             const wz=-d/2+(n+.5)*d/2;
 
             box(
-              building,w/2+.025,wy,wz,
-              .045,1.05,d/2*.56,glass
+              building,w/2+.045,wy,wz,
+              .055,1.15,d/2*.53,
+              glass
             );
 
             box(
-              building,-w/2-.025,wy,wz,
-              .045,1.05,d/2*.56,glass
+              building,-w/2-.045,wy,wz,
+              .055,1.15,d/2*.53,
+              glass
             );
           }
 
-          if(random()<.22){
+          // شرفات متفرقة
+          if(floor>1 && random()<.23){
             box(
-              building,0,wy-.45,d/2+.32,
-              w*.65,.12,.65,balconyMat
+              building,0,wy-.55,d/2+.28,
+              w*.72,.11,.55,
+              balconyMat
+            );
+
+            box(
+              building,0,wy-.28,d/2+.52,
+              w*.72,.42,.055,
+              railingMat
+            );
+
+            box(
+              building,-w*.35,wy-.28,d/2+.32,
+              .055,.42,.4,
+              railingMat
+            );
+
+            box(
+              building,w*.35,wy-.28,d/2+.32,
+              .055,.42,.4,
+              railingMat
             );
           }
         }
 
-        // باب المدخل
-        box(building,0,1.05,d/2+.04,.95,2.1,.08,darkGlass);
-        box(building,0,2.2,d/2+.09,1.2,.12,.12,sidewalkLight);
+        // مدخل المبنى
+        box(
+          building,0,1.05,d/2+.09,
+          .82,2.05,.1,
+          darkGlass
+        );
 
-        if(random()<.4){
-          box(building,w/2+.12,h*.45,0,.3,.55,.7,acMat);
+        box(
+          building,-.48,1.05,d/2+.14,
+          .09,2.15,.12,
+          trimMat
+        );
+
+        box(
+          building,.48,1.05,d/2+.14,
+          .09,2.15,.12,
+          trimMat
+        );
+
+        box(
+          building,0,2.15,d/2+.14,
+          1.05,.12,.12,
+          trimMat
+        );
+
+        // وحدات تكييف خارجية
+        if(random()<.5){
+          box(
+            building,w/2+.12,h*.48,0,
+            .28,.5,.62,
+            acMat
+          );
+
+          box(
+            building,w/2+.28,h*.48,0,
+            .035,.32,.42,
+            roofMat
+          );
+        }
+
+        // غرفة سطح صغيرة أو خزان مياه
+        if(random()<.5){
+          box(
+            building,-w*.2,h+.65,-d*.15,
+            w*.32,.72,d*.3,
+            wallMat
+          );
+
+          box(
+            building,-w*.2,h+1.03,-d*.15,
+            w*.34,.08,d*.32,
+            trimMat
+          );
+        }else if(random()<.55){
+          cylinder(
+            building,w*.22,h+.58,-d*.18,
+            .38,.38,.9,
+            tankMat,8
+          );
+
+          cylinder(
+            building,w*.22,h+1.04,-d*.18,
+            .39,.39,.12,
+            roofMat,8
+          );
         }
 
         buildingObstacles.push({
@@ -419,9 +585,13 @@ for(let gx=-4;gx<4;gx++){
 // =====================================================
 
 const trunkMat=mat(0x65462e);
+
 const leafMats=[
-  mat(0x347448),mat(0x477f42),mat(0x2f693d)
+  mat(0x347448),
+  mat(0x477f42),
+  mat(0x2f693d)
 ];
+
 const planterMat=mat(0x858a83);
 
 function makeTree(x,z){
@@ -437,7 +607,6 @@ function makeTree(x,z){
   scene.add(crown);
 }
 
-// أشجار أقل كثافة، موزعة على الأرصفة
 for(let p=-4;p<=4;p++){
   for(let q=-140;q<=140;q+=28){
     if(Math.abs(q%35)<11)continue;
@@ -454,6 +623,7 @@ for(let p=-4;p<=4;p++){
 // =====================================================
 
 const poleMat=mat(0x4b545b,.6,.2);
+
 const lampMat=new THREE.MeshStandardMaterial({
   color:0xfff0c3,
   emissive:0xffd87b,
@@ -504,8 +674,10 @@ function makeTrafficLight(x,z,rotation=0){
 
   for(const l of lights){
     const bulb=new THREE.Mesh(
-      new THREE.SphereGeometry(.13,7,6),l.m
+      new THREE.SphereGeometry(.13,7,6),
+      l.m
     );
+
     bulb.position.set(0,l.y,.23);
     g.add(bulb);
   }
@@ -544,7 +716,8 @@ function makeCar(color=0xd94343){
   for(const x of [-1.08,1.08]){
     for(const z of [-1.28,1.28]){
       const wheel=new THREE.Mesh(
-        new THREE.CylinderGeometry(.4,.4,.24,10),tireMat
+        new THREE.CylinderGeometry(.4,.4,.24,10),
+        tireMat
       );
 
       wheel.rotation.z=Math.PI/2;
@@ -564,7 +737,6 @@ function makeCar(color=0xd94343){
 const car=makeCar(0xd94343);
 car.position.set(5,0,5);
 
-// سيارات متوقفة بألوان مختلفة
 for(let i=-3;i<=3;i++){
   for(const side of [-1,1]){
     const z=i*35+side*11;
@@ -613,8 +785,11 @@ function createFallbackCharacter(){
 
   part(new THREE.BoxGeometry(.75,.85,.4),shirt,0,1.35,0);
   part(new THREE.SphereGeometry(.28,10,8),skin,0,2.05,0);
+
   part(
-    new THREE.SphereGeometry(.285,10,6,0,Math.PI*2,0,Math.PI*.48),
+    new THREE.SphereGeometry(
+      .285,10,6,0,Math.PI*2,0,Math.PI*.48
+    ),
     hair,0,2.16,0
   );
 
@@ -913,7 +1088,7 @@ document.querySelectorAll("[data-key]").forEach(button=>{
   });
 });
 
-// زر بدء اللعب
+// بدء اللعب
 $("play").addEventListener("click",()=>{
   started=true;
   startScreen.style.display="none";
@@ -938,7 +1113,7 @@ $("play").addEventListener("click",()=>{
 });
 
 // =====================================================
-// حلقة اللعبة: تخفيف الحمل على الأجهزة القديمة
+// حلقة اللعبة
 // =====================================================
 
 let previousTime=performance.now();
@@ -951,7 +1126,6 @@ function animate(){
 
   const now=performance.now();
 
-  // رسم بحد أقصى يقارب 30 إطارًا في الثانية
   if(now-lastRenderTime<TARGET_FRAME_MS)return;
 
   lastRenderTime=now;
@@ -965,13 +1139,13 @@ function animate(){
   reward.position.y=Math.sin(now*.002)*.15;
   reward.rotation.y+=dt*.5;
 
-  // حركة الشخصية البديلة
+  // حركة أطراف الشخصية البديلة
   if(fallbackModel&&!driving&&player.children[0]){
     const fallback=player.children[0];
     const moving=keys.w||keys.s;
 
     const swing=moving
-      ?Math.sin(now*.012)*(keys.shift?.75:.45)
+      ?Math.sin(now*.012)*(keys.shift ? .75 : .45)
       :0;
 
     const limbs=fallback.userData.limbs||[];
@@ -1089,7 +1263,6 @@ function animate(){
 
 animate();
 
-// تغيير حجم العرض عند تغيير حجم النافذة
 addEventListener("resize",()=>{
   camera.aspect=innerWidth/innerHeight;
   camera.updateProjectionMatrix();
@@ -1102,4 +1275,3 @@ addEventListener("resize",()=>{
 </script>
 </body>
 </html>
-```
