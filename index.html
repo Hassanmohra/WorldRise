@@ -430,8 +430,8 @@ loader.load(
     const model=gltf.scene;
 
     // إعداد النموذج ليقف على الأرض
-    model.scale.setScalar(1);
-    model.position.set(0,-1,0);
+    model.scale.setScalar(1.8);
+    model.position.set(0,0,0);
 
     model.traverse(function(obj){
       if(obj.isMesh){
