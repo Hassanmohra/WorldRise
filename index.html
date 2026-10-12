@@ -303,282 +303,398 @@ for(const x of roadCenters){
 }
 
 // =====================================================
-// المباني والواجهات والمحلات
-// =====================================================
 
-const buildingObstacles=[];
+ // =====================================================
+ // مباني WorldRise شبه الواقعية — نسخة محسنة للأداء
+ // =====================================================
 
-const buildingColors=[
-  0xd8d0c2,0xe1ded5,0xc4b39c,0xb8c4c8,
-  0xaab7c2,0xd5c7b8,0xaaa9a1,0xe5e0d6
+const buildingObstacles = [];
+
+const buildingColors = [
+  0xd8cbb7, 0xe2d9ca, 0xc5b49b, 0xcbd0ce,
+  0xb7c5c8, 0xd7c7b5, 0xb7b2a8, 0xe6dfd2
 ];
 
-const glass=mat(0x75a9bd,.28,.18);
-const darkGlass=mat(0x263f50,.32,.12);
-const balconyMat=mat(0x6a7176,.55,.12);
-const roofMat=mat(0x666b6c,.8,.05);
-const trimMat=mat(0xf0e9dc,.65,.05);
-const stoneMat=mat(0x8d8273,.9,.02);
-const shopGlass=mat(0x376879,.22,.15);
+// مواد مشتركة حتى لا ننشئ مادة جديدة لكل نافذة
+const glass = mat(0x7299a9, .4, .12);
+const darkGlass = mat(0x253d4b, .45, .08);
+const shopGlass = mat(0x426b78, .35, .08);
+const stone = mat(0xb4a28a, .95, 0);
+const lightStone = mat(0xe5d9c5, .92, 0);
+const darkStone = mat(0x817565, .95, 0);
+const concrete = mat(0x898b86, .92, 0);
+const balconyMetal = mat(0x454b4e, .7, .1);
+const roofMaterial = mat(0x73736d, .95, 0);
+const acMaterial = mat(0x8b9699, .8, .05);
+const tankMaterial = mat(0xa5afb0, .75, .04);
 
-const signMats=[
-  mat(0x4f65a8,.55,.05),
-  mat(0x237a68,.55,.05),
-  mat(0x9a5939,.55,.05),
-  mat(0x6e4a8d,.55,.05)
+const shopColors = [
+  mat(0x435b88, .7, .05),
+  mat(0x35715d, .7, .05),
+  mat(0x986044, .7, .05),
+  mat(0x70518a, .7, .05)
 ];
 
-const acMat=mat(0x777f83);
-const tankMat=mat(0x9ba6aa,.75,.05);
-const railingMat=mat(0x3e474d,.6,.15);
+// صندوق زخرفي: جميع الأبعاد بالمتر تقريبًا
+function detailBox(parent, x, y, z, w, h, d, material) {
+  return box(parent, x, y, z, w, h, d, material);
+}
 
-for(let gx=-4;gx<4;gx++){
-  for(let gz=-4;gz<4;gz++){
-    const cx=(gx+.5)*35;
-    const cz=(gz+.5)*35;
+// إنشاء واجهة أمامية بإطارات حجرية
+function addFrontWindow(building, x, y, z, w, h) {
+  // النافذة
+  detailBox(building, x, y, z, w, h, .07, darkGlass);
 
-    for(const j of [-1,1]){
-      for(const k of [-1,1]){
-        const x=cx+j*7.2+range(-.35,.35);
-        const z=cz+k*7.2+range(-.35,.35);
-        const w=range(4.8,5.8);
-        const d=range(4.8,5.8);
-        const h=range(9,30);
-        const floors=Math.max(2,Math.floor(h/3));
+  // الإطار الخارجي
+  detailBox(building, x, y + h / 2 + .045, z + .045,
+    w + .16, .09, .09, lightStone);
 
-        const wallMat=mat(
-          buildingColors[Math.floor(random()*buildingColors.length)]
+  detailBox(building, x, y - h / 2 - .045, z + .045,
+    w + .16, .09, .09, lightStone);
+
+  detailBox(building, x - w / 2 - .045, y, z + .045,
+    .09, h, .09, lightStone);
+
+  detailBox(building, x + w / 2 + .045, y, z + .045,
+    .09, h, .09, lightStone);
+
+  // فاصل زجاجي رأسي
+  detailBox(building, x, y, z + .09, .045, h - .1, .045, stone);
+}
+
+// إنشاء شرفة صغيرة بواجهة معدنية
+function addBalcony(building, x, y, z, w) {
+  detailBox(building, x, y - .48, z + .35,
+    w, .12, .75, concrete);
+
+  // الدرابزين العلوي والسفلي
+  detailBox(building, x, y - .12, z + .68,
+    w, .07, .07, balconyMetal);
+
+  detailBox(building, x, y - .45, z + .68,
+    w, .06, .07, balconyMetal);
+
+  // أعمدة الدرابزين
+  const count = 4;
+
+  for (let i = 0; i < count; i++) {
+    const px = x - w / 2 + (i / (count - 1)) * w;
+
+    detailBox(building, px, y - .29, z + .68,
+      .045, .34, .045, balconyMetal);
+  }
+}
+
+// توليد مناطق المدينة
+for (let gx = -4; gx < 4; gx++) {
+  for (let gz = -4; gz < 4; gz++) {
+    const cx = (gx + .5) * 35;
+    const cz = (gz + .5) * 35;
+
+    for (const j of [-1, 1]) {
+      for (const k of [-1, 1]) {
+        const x = cx + j * 7.2 + range(-.3, .3);
+        const z = cz + k * 7.2 + range(-.3, .3);
+
+        const w = range(4.9, 5.8);
+        const d = range(4.9, 5.8);
+        const h = range(9, 27);
+        const floors = Math.max(2, Math.floor(h / 3));
+
+        const wallMaterial = mat(
+          buildingColors[
+            Math.floor(random() * buildingColors.length)
+          ],
+          .96,
+          0
         );
 
-        const building=new THREE.Group();
-        building.position.set(x,0,z);
+        const building = new THREE.Group();
+        building.position.set(x, 0, z);
         scene.add(building);
 
-        // جسم المبنى وحواف السطح
-        box(building,0,h/2,0,w,h,d,wallMat);
-        box(building,0,.42,d/2+.035,w,.82,.09,stoneMat);
-        box(building,0,h+.12,0,w+.32,.24,d+.32,roofMat);
-        box(building,0,h+.28,0,w+.12,.08,d+.12,trimMat);
+        // الجسم الأساسي للمبنى
+        detailBox(
+          building, 0, h / 2, 0,
+          w, h, d,
+          wallMaterial
+        );
 
-        // زخرفة معمارية متنوعة
-        if(random()<.55){
-          const sideX=random()<.5?-1:1;
+        // قاعدة حجرية سفلية بارزة
+        detailBox(
+          building, 0, .45, d / 2 + .045,
+          w + .12, .9, .13,
+          darkStone
+        );
 
-          box(
+        // طبقة حجر فاتح فوق القاعدة
+        detailBox(
+          building, 0, .92, d / 2 + .12,
+          w + .12, .09, .12,
+          lightStone
+        );
+
+        // حواف السطح
+        detailBox(
+          building, 0, h + .12, 0,
+          w + .35, .24, d + .35,
+          roofMaterial
+        );
+
+        detailBox(
+          building, 0, h + .27, 0,
+          w + .18, .08, d + .18,
+          lightStone
+        );
+
+        // أعمدة حجرية رأسية على الواجهة
+        for (const side of [-1, 1]) {
+          detailBox(
             building,
-            sideX*(w/2-.22),
-            h/2,
-            d/2+.055,
-            .16,h-.7,.09,
-            trimMat
+            side * (w / 2 - .18),
+            h / 2,
+            d / 2 + .075,
+            .16, h - .55, .12,
+            lightStone
           );
-        }else{
-          for(let yy=3.1;yy<h-1;yy+=3.1){
-            box(
-              building,0,yy,d/2+.055,
-              w-.15,.075,.09,
-              trimMat
-            );
-          }
         }
 
-        // واجهة المحل الزجاجية ولوحة الواجهة
-        const shopSign=signMats[
-          Math.floor(random()*signMats.length)
+        // تقسيمات أفقية تعطي الواجهة مظهر الطوابق
+        for (let yy = 3; yy < h - .5; yy += 3) {
+          detailBox(
+            building, 0, yy, d / 2 + .075,
+            w - .12, .07, .11,
+            stone
+          );
+        }
+
+        // محل أرضي بزجاج واسع ومدخل واضح
+        const signMaterial = shopColors[
+          Math.floor(random() * shopColors.length)
         ];
 
-        box(
-          building,0,1.35,d/2+.075,
-          w*.68,1.75,.09,
+        const shopWidth = w * .64;
+
+        detailBox(
+          building, 0, 1.4, d / 2 + .10,
+          shopWidth, 1.72, .10,
           shopGlass
         );
 
-        box(
-          building,0,2.42,d/2+.14,
-          w*.76,.34,.16,
-          shopSign
+        // تقسيم زجاج المحل إلى واجهتين
+        detailBox(
+          building, 0, 1.4, d / 2 + .17,
+          .065, 1.7, .07,
+          balconyMetal
         );
 
-        box(
-          building,0,.45,d/2+.12,
-          w*.72,.12,.14,
-          balconyMat
+        // لوحة المحل الملونة
+        detailBox(
+          building, 0, 2.43, d / 2 + .14,
+          shopWidth + .3, .34, .16,
+          signMaterial
         );
 
-        box(
-          building,-w*.36,1.35,d/2+.14,
-          .09,1.8,.12,
-          trimMat
+        // إطار اللوحة
+        detailBox(
+          building, 0, 2.62, d / 2 + .16,
+          shopWidth + .38, .06, .17,
+          lightStone
         );
 
-        box(
-          building,w*.36,1.35,d/2+.14,
-          .09,1.8,.12,
-          trimMat
-        );
+        // باب جانبي
+        const doorX = w * .39;
 
-        box(
-          building,0,2.28,d/2+.14,
-          w*.72,.08,.12,
-          trimMat
-        );
-
-        // النوافذ وإطاراتها
-        for(let floor=1;floor<floors;floor++){
-          const wy=1.4+floor*2.7;
-          if(wy>h-1.1)continue;
-
-          for(let n=0;n<2;n++){
-            const wx=-w/2+(n+.5)*w/2;
-            const ww=w/2*.53;
-            const windowMaterial=random()<.22?darkGlass:glass;
-
-            box(
-              building,wx,wy,d/2+.045,
-              ww,1.15,.055,
-              windowMaterial
-            );
-
-            box(
-              building,wx,wy,-d/2-.045,
-              ww,1.15,.055,
-              windowMaterial
-            );
-
-            box(
-              building,wx,wy+.6,d/2+.08,
-              ww+.12,.09,.07,
-              trimMat
-            );
-
-            box(
-              building,wx,wy-.6,d/2+.08,
-              ww+.12,.09,.07,
-              trimMat
-            );
-          }
-
-          for(let n=0;n<2;n++){
-            const wz=-d/2+(n+.5)*d/2;
-
-            box(
-              building,w/2+.045,wy,wz,
-              .055,1.15,d/2*.53,
-              glass
-            );
-
-            box(
-              building,-w/2-.045,wy,wz,
-              .055,1.15,d/2*.53,
-              glass
-            );
-          }
-
-          // شرفات متفرقة
-          if(floor>1 && random()<.23){
-            box(
-              building,0,wy-.55,d/2+.28,
-              w*.72,.11,.55,
-              balconyMat
-            );
-
-            box(
-              building,0,wy-.28,d/2+.52,
-              w*.72,.42,.055,
-              railingMat
-            );
-
-            box(
-              building,-w*.35,wy-.28,d/2+.32,
-              .055,.42,.4,
-              railingMat
-            );
-
-            box(
-              building,w*.35,wy-.28,d/2+.32,
-              .055,.42,.4,
-              railingMat
-            );
-          }
-        }
-
-        // مدخل المبنى
-        box(
-          building,0,1.05,d/2+.09,
-          .82,2.05,.1,
+        detailBox(
+          building, doorX, 1.04, d / 2 + .09,
+          .48, 2.08, .10,
           darkGlass
         );
 
-        box(
-          building,-.48,1.05,d/2+.14,
-          .09,2.15,.12,
-          trimMat
+        detailBox(
+          building, doorX - .27, 1.04, d / 2 + .15,
+          .07, 2.15, .09,
+          lightStone
         );
 
-        box(
-          building,.48,1.05,d/2+.14,
-          .09,2.15,.12,
-          trimMat
+        detailBox(
+          building, doorX + .27, 1.04, d / 2 + .15,
+          .07, 2.15, .09,
+          lightStone
         );
 
-        box(
-          building,0,2.15,d/2+.14,
-          1.05,.12,.12,
-          trimMat
+        // مظلة صغيرة فوق واجهة المحل
+        detailBox(
+          building, 0, 2.78, d / 2 + .3,
+          shopWidth + .55, .09, .55,
+          signMaterial
         );
 
-        // وحدات تكييف خارجية
-        if(random()<.5){
-          box(
-            building,w/2+.12,h*.48,0,
-            .28,.5,.62,
-            acMat
+        // نوافذ الطوابق العليا
+        for (let floor = 1; floor < floors; floor++) {
+          const wy = 1.45 + floor * 2.8;
+
+          if (wy > h - 1.1) continue;
+
+          const windowWidth = w * .27;
+          const windowHeight = 1.18;
+
+          for (const side of [-1, 1]) {
+            const wx = side * w * .23;
+
+            addFrontWindow(
+              building,
+              wx,
+              wy,
+              d / 2 + .06,
+              windowWidth,
+              windowHeight
+            );
+
+            // حافة سفلية بارزة للنافذة
+            detailBox(
+              building, wx, wy - .67, d / 2 + .14,
+              windowWidth + .25, .10, .22,
+              lightStone
+            );
+
+            // مصراع أو لوحة جانبية في بعض النوافذ
+            if (floor > 1 && random() < .25) {
+              detailBox(
+                building,
+                wx + side * (windowWidth / 2 + .12),
+                wy,
+                d / 2 + .13,
+                .12, .8, .08,
+                darkStone
+              );
+            }
+          }
+
+          // شرفات متفرقة
+          if (floor > 1 && random() < .3) {
+            addBalcony(
+              building,
+              0,
+              wy,
+              d / 2 + .08,
+              w * .72
+            );
+          }
+        }
+
+        // نوافذ جانبية لتبدو المباني ثلاثية الأبعاد من زوايا مختلفة
+        for (let floor = 1; floor < floors; floor += 2) {
+          const wy = 1.45 + floor * 2.8;
+          if (wy > h - 1.1) continue;
+
+          for (const side of [-1, 1]) {
+            detailBox(
+              building,
+              side * (w / 2 + .045),
+              wy,
+              0,
+              .07, 1.1, d * .32,
+              glass
+            );
+          }
+        }
+
+        // غرفة سطح صغيرة
+        if (random() < .58) {
+          const rw = w * .38;
+          const rd = d * .35;
+          const rx = -w * .17;
+          const rz = -d * .12;
+
+          detailBox(
+            building, rx, h + .66, rz,
+            rw, .72, rd,
+            wallMaterial
           );
 
-          box(
-            building,w/2+.28,h*.48,0,
-            .035,.32,.42,
-            roofMat
+          detailBox(
+            building, rx, h + 1.04, rz,
+            rw + .12, .08, rd + .12,
+            lightStone
+          );
+
+          // باب غرفة السطح
+          detailBox(
+            building, rx, h + .42, rz + rd / 2 + .045,
+            .35, .48, .06,
+            darkGlass
           );
         }
 
-        // غرفة سطح صغيرة أو خزان مياه
-        if(random()<.5){
-          box(
-            building,-w*.2,h+.65,-d*.15,
-            w*.32,.72,d*.3,
-            wallMat
-          );
+        // خزان مياه فوق بعض المباني
+        if (random() < .45) {
+          const tx = w * .23;
+          const tz = -d * .2;
 
-          box(
-            building,-w*.2,h+1.03,-d*.15,
-            w*.34,.08,d*.32,
-            trimMat
-          );
-        }else if(random()<.55){
           cylinder(
-            building,w*.22,h+.58,-d*.18,
-            .38,.38,.9,
-            tankMat,8
+            building, tx, h + .65, tz,
+            .38, .38, .95,
+            tankMaterial, 8
           );
 
           cylinder(
-            building,w*.22,h+1.04,-d*.18,
-            .39,.39,.12,
-            roofMat,8
+            building, tx, h + 1.15, tz,
+            .39, .39, .10,
+            roofMaterial, 8
+          );
+
+          // قاعدة الخزان
+          detailBox(
+            building, tx, h + .14, tz,
+            .85, .16, .85,
+            concrete
           );
         }
 
+        // وحدة تكييف خارجية
+        if (random() < .5) {
+          detailBox(
+            building,
+            w / 2 + .12,
+            h * .48,
+            0,
+            .3, .48, .62,
+            acMaterial
+          );
+
+          detailBox(
+            building,
+            w / 2 + .285,
+            h * .48,
+            0,
+            .035, .30, .40,
+            darkStone
+          );
+        }
+
+        // حافة بارزة حول جزء من السطح
+        detailBox(
+          building, 0, h + .39, d / 2,
+          w * .72, .16, .12,
+          stone
+        );
+
+        // حدود التصادم للمبنى: نحافظ على آلية اللعبة الحالية
         buildingObstacles.push({
-          minX:x-w/2-.2,
-          maxX:x+w/2+.2,
-          minZ:z-d/2-.2,
-          maxZ:z+d/2+.2
+          minX: x - w / 2 - .2,
+          maxX: x + w / 2 + .2,
+          minZ: z - d / 2 - .2,
+          maxZ: z + d / 2 + .2
         });
       }
     }
   }
 }
+
+// =====================================================
+// نهاية قسم المباني — يبدأ قسم الأشجار بعده
+// =====================================================
 
 // =====================================================
 // الأشجار
