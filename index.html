@@ -804,6 +804,64 @@ for(const p of [-105,-70,-35,0,35,70,105]){
   makeTrafficLight(p-9,p+9,-Math.PI/2);
 }
 
+ // =====================================================
+// حركة المرور في مدينة WorldRise
+// عدد محدود من السيارات للحفاظ على الأداء
+// =====================================================
+
+const trafficCars = [];
+
+function createTrafficCar(laneX, startZ, direction, color) {
+  const vehicle = makeCar(color);
+
+  vehicle.scale.setScalar(0.72);
+  vehicle.position.set(laneX, 0, startZ);
+
+  // اتجاه السير: للأمام أو للخلف على الطريق
+  vehicle.rotation.y = direction > 0 ? 0 : Math.PI;
+
+  trafficCars.push({
+    vehicle: vehicle,
+    laneX: laneX,
+    direction: direction,
+    speed: range(5, 8),
+    wheels: vehicle.userData.wheels
+  });
+}
+
+// توزيع السيارات على مسارات مختلفة
+createTrafficCar(-37.5, -90,  1, 0x2878c7);
+createTrafficCar(-32.5,  65, -1, 0xe8e7df);
+createTrafficCar(-2.5, -170, 1, 0x38a27d);
+createTrafficCar( 2.5,  130,-1, 0xd3b94d);
+createTrafficCar(32.5, -45,  1, 0xb84a42);
+createTrafficCar(37.5, 190, -1, 0x292f38);
+
+// تحديث حركة السيارات
+function updateTraffic(dt) {
+  for (const traffic of trafficCars) {
+    const vehicle = traffic.vehicle;
+
+    vehicle.position.z +=
+      traffic.direction * traffic.speed * dt;
+
+    // تدوير العجلات أثناء الحركة
+    for (const wheel of traffic.wheels) {
+      wheel.rotation.x +=
+        traffic.direction * dt * 5;
+    }
+
+    // إعادة السيارة إلى بداية الطريق عند نهايته
+    if (traffic.direction > 0 && vehicle.position.z > 310) {
+      vehicle.position.z = -310;
+    }
+
+    if (traffic.direction < 0 && vehicle.position.z < -310) {
+      vehicle.position.z = 310;
+    }
+  }
+}
+
 // =====================================================
 // السيارات
 // =====================================================
@@ -1250,6 +1308,7 @@ function animate(){
   previousTime=now;
 
   if(mixer)mixer.update(dt);
+  if (started) updateTraffic(dt);
 
   coin.rotation.y+=dt*1.6;
   reward.position.y=Math.sin(now*.002)*.15;
