@@ -4,51 +4,79 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WorldRise | عالمك المفتوح</title>
+<meta name="theme-color" content="#101b2d">
+<title>WorldRise | Open World</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;overflow:hidden;background:#9cc9e8;font-family:Arial,sans-serif;color:white}
 #game{position:fixed;inset:0}
 #hud{position:fixed;inset:0;pointer-events:none}
-.panel{background:#101b2ddd;border:1px solid #ffffff30;border-radius:14px;padding:12px 16px;backdrop-filter:blur(8px)}
+.panel{background:#101b2ddd;border:1px solid #ffffff35;border-radius:14px;padding:11px 15px;backdrop-filter:blur(8px)}
 #brand{position:absolute;top:14px;left:14px}
-#brand strong{font-size:21px;color:#a6f0d0}
-#stats{position:absolute;top:14px;right:14px;line-height:1.8}
-#help{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);width:max-content;max-width:95%;text-align:center;font-size:13px}
-#message{position:absolute;top:100px;left:50%;transform:translateX(-50%);color:#fff;background:#101b2ddd;padding:10px 16px;border-radius:10px;display:none;text-align:center}
-#start{position:fixed;inset:0;z-index:5;display:grid;place-items:center;background:linear-gradient(#09182cbb,#09182cdd);padding:20px}
-#start .card{max-width:500px;text-align:center;padding:32px 24px;border:1px solid #ffffff30;border-radius:24px;background:#101b2df2}
-h1{font-size:clamp(38px,8vw,64px);margin:0;color:#a6f0d0}
-#start p{line-height:1.9;color:#dce8f5}
-button{border:0;border-radius:12px;padding:13px 22px;font-size:16px;font-weight:bold;cursor:pointer;background:#8ce5c0;color:#102c29}
-#controls{position:fixed;bottom:100px;left:18px;display:none;gap:10px;pointer-events:auto;direction:ltr}
-.pad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,48px);gap:5px}
-.pad button,.action{padding:0;background:#102238cc;color:white;border:1px solid #ffffff60;touch-action:none}
-#actions{display:flex;flex-direction:column;gap:8px;justify-content:end}
-.action{width:62px;height:48px;border-radius:50%}
-@media(pointer:coarse){#controls{display:flex}#help{bottom:12px;font-size:11px}#brand{top:10px;left:10px}#stats{top:10px;right:10px}}
+#brand strong{font-size:22px;color:#a6f0d0}
+#stats{position:absolute;top:14px;right:14px;line-height:1.9}
+#help{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);width:max-content;max-width:94%;text-align:center;font-size:12px}
+#message{position:absolute;top:110px;left:50%;transform:translateX(-50%);background:#101b2dee;padding:12px 18px;border-radius:12px;display:none;text-align:center;max-width:90%;width:max-content}
+#start{position:fixed;inset:0;z-index:5;display:grid;place-items:center;background:linear-gradient(#09182cbb,#09182cee);padding:18px}
+.card{max-width:500px;width:100%;text-align:center;padding:30px 22px;border:1px solid #ffffff35;border-radius:24px;background:#101b2df5}
+h1{font-size:clamp(40px,9vw,66px);margin:0;color:#a6f0d0}
+.card p{line-height:1.9;color:#dce8f5}
+button{border:0;border-radius:12px;padding:13px 20px;font-size:15px;font-weight:bold;cursor:pointer;background:#8ce5c0;color:#102c29}
+#controls{position:fixed;bottom:85px;left:15px;display:flex;gap:10px;pointer-events:auto;direction:ltr;align-items:end}
+.pad{display:grid;grid-template-columns:repeat(3,45px);grid-template-rows:repeat(2,45px);gap:4px}
+.pad button,.action{padding:0;background:#102238d9;color:white;border:1px solid #ffffff60;touch-action:none;user-select:none;-webkit-user-select:none}
+.pad span{pointer-events:none}
+#actions{display:flex;flex-direction:column;gap:7px}
+.action{width:55px;height:43px;border-radius:13px;font-size:12px}
+@media(pointer:fine){#controls{opacity:.75}}
+@media(max-width:600px){
+ .panel{padding:8px 10px}
+ #brand{top:8px;left:8px}
+ #brand strong{font-size:18px}
+ #stats{top:8px;right:8px;font-size:12px}
+ #help{bottom:7px;font-size:10px}
+ #controls{bottom:60px;left:8px;gap:5px}
+ .pad{grid-template-columns:repeat(3,40px);grid-template-rows:repeat(2,40px)}
+ .action{width:48px;height:39px;font-size:10px}
+}
 </style>
 </head>
+
 <body>
 <div id="game"></div>
+
 <div id="hud">
-  <div id="brand" class="panel"><strong>WorldRise</strong><br><small>OPEN WORLD • DEMO 01</small></div>
+  <div id="brand" class="panel">
+    <strong>WorldRise</strong><br>
+    <small>OPEN WORLD • DEMO 02</small>
+  </div>
+
   <div id="stats" class="panel">
     <div>💰 الرصيد: <b id="money">1000</b>$</div>
-    <div>🚶 الوضع: <b id="mode">استكشاف</b></div>
-    <div>📍 المنطقة: المدينة الأولى</div>
+    <div>🎮 الوضع: <b id="mode">استكشاف</b></div>
+    <div>📍 المدينة الأولى</div>
   </div>
+
   <div id="message"></div>
-  <div id="help" class="panel">W A S D للحركة • E لدخول السيارة أو الخروج منها • اجمع العلامة الذهبية</div>
+
+  <div id="help" class="panel">
+    W A S D للحركة • Space للقفز • Shift للجري • E للسيارة
+  </div>
 </div>
 
 <div id="start">
   <div class="card">
     <h1>WorldRise</h1>
-    <p>عالم مفتوح يبدأ من هنا.<br>استكشف المدينة، تجوّل بين المباني، وجرّب قيادة سيارتك.</p>
-    <p>نسخة تجريبية ثلاثية الأبعاد للكمبيوتر والهاتف.</p>
+    <p>
+      مرحبًا بك في عالمك المفتوح!<br>
+      استكشف المدينة، اقفز، اركض، وجرّب قيادة السيارة.
+    </p>
+    <p>المرحلة الثانية: حركة محسّنة وتصادم مع المباني.</p>
     <button id="play">ابدأ اللعب</button>
-    <p style="font-size:12px">تحتاج إلى اتصال بالإنترنت لتحميل مكتبة الرسومات ثلاثية الأبعاد.</p>
+    <p style="font-size:12px">
+      تحتاج اللعبة إلى اتصال بالإنترنت لتحميل مكتبة الرسومات.
+    </p>
   </div>
 </div>
 
@@ -58,14 +86,16 @@ button{border:0;border-radius:12px;padding:13px 22px;font-size:16px;font-weight:
     <button data-key="a">◀</button><button data-key="s">▼</button><button data-key="d">▶</button>
   </div>
   <div id="actions">
-    <button class="action" data-key="e">E</button>
+    <button class="action" data-key="e">🚗 E</button>
+    <button class="action" data-key="space">⬆ JUMP</button>
     <button class="action" data-key="shift">RUN</button>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
 <script>
-(() => {
+(function(){
 "use strict";
 
 const game = document.getElementById("game");
@@ -74,158 +104,213 @@ const message = document.getElementById("message");
 const moneyLabel = document.getElementById("money");
 const modeLabel = document.getElementById("mode");
 
-if (!window.THREE) {
-  message.style.display = "block";
-  message.textContent = "تعذر تحميل الرسومات. تحقق من اتصال الإنترنت ثم أعد تحميل الصفحة.";
+if(!window.THREE){
+  message.style.display="block";
+  message.textContent="تعذر تحميل الرسومات. تحقق من الإنترنت وأعد تحميل الصفحة.";
   return;
 }
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x9cc9e8);
-scene.fog = new THREE.Fog(0x9cc9e8, 100, 300);
+scene.fog = new THREE.Fog(0x9cc9e8,100,300);
 
-const camera = new THREE.PerspectiveCamera(65, innerWidth / innerHeight, 0.1, 500);
+const camera = new THREE.PerspectiveCamera(
+  65,innerWidth/innerHeight,0.1,500
+);
+
 const renderer = new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(innerWidth, innerHeight);
-renderer.setPixelRatio(Math.min(devicePixelRatio, 1.6));
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.setSize(innerWidth,innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 game.appendChild(renderer.domElement);
 
-scene.add(new THREE.HemisphereLight(0xdceeff, 0x536047, 2));
+scene.add(new THREE.HemisphereLight(0xdceeff,0x536047,2));
 
-const sun = new THREE.DirectionalLight(0xfff0d5, 3);
-sun.position.set(-50, 90, 40);
-sun.castShadow = true;
+const sun = new THREE.DirectionalLight(0xfff0d5,2.5);
+sun.position.set(-50,90,40);
+sun.castShadow=true;
 sun.shadow.mapSize.set(1024,1024);
 scene.add(sun);
 
-const mat = (color, roughness=0.9) =>
-  new THREE.MeshStandardMaterial({color, roughness});
+function material(color,roughness=0.9){
+  return new THREE.MeshStandardMaterial({color,roughness});
+}
 
-const grassMat = mat(0x648b58);
-const roadMat = mat(0x303943);
-const sidewalkMat = mat(0xb5b9b4);
-const whiteMat = mat(0xf0f1e8);
-const darkMat = mat(0x202a35);
-const glassMat = new THREE.MeshStandardMaterial({
-  color:0x8bc8dd, metalness:0.25, roughness:0.22
+const grassMat=material(0x648b58);
+const roadMat=material(0x303943);
+const whiteMat=material(0xf0f1e8);
+const glassMat=new THREE.MeshStandardMaterial({
+  color:0x8bc8dd,metalness:0.25,roughness:0.22
 });
 
-function box(parent, x,y,z, w,h,d, material, shadow=true) {
-  const mesh = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), material);
+function box(parent,x,y,z,w,h,d,mat,shadow=true){
+  const mesh=new THREE.Mesh(
+    new THREE.BoxGeometry(w,h,d),mat
+  );
   mesh.position.set(x,y,z);
-  mesh.castShadow = shadow;
-  mesh.receiveShadow = true;
+  mesh.castShadow=shadow;
+  mesh.receiveShadow=true;
   parent.add(mesh);
   return mesh;
 }
 
+// الأرض
 box(scene,0,-0.6,0,400,1,400,grassMat,false);
 
-// Roads in a simple city grid.
+// الطرق الرئيسية وخطوطها
 for(let i=-3;i<=3;i++){
   const p=i*35;
+
   box(scene,p,0.02,0,12,0.08,400,roadMat,false);
   box(scene,0,0.025,p,400,0.08,12,roadMat,false);
 
   for(let z=-185;z<200;z+=18){
     box(scene,p,0.08,z,0.18,0.025,7,whiteMat,false);
   }
+
   for(let x=-185;x<200;x+=18){
     box(scene,x,0.08,p,7,0.025,0.18,whiteMat,false);
   }
 }
 
-// Sidewalks, buildings, windows and rooftop details.
-const buildingColors=[0xb8c4ce,0xd4c4a9,0x929eae,0xe1ded5,0x9eb6bd,0xb7a9a0];
+// المباني وتسجيل حدودها للتصادم
+const buildingColors=[
+  0xb8c4ce,0xd4c4a9,0x929eae,
+  0xe1ded5,0x9eb6bd,0xb7a9a0
+];
+
+const buildingObstacles=[];
+
 let seed=98217;
+
 function random(){
   seed=(seed*1664525+1013904223)>>>0;
   return seed/4294967296;
 }
 
 for(let gx=-3;gx<3;gx++){
- for(let gz=-3;gz<3;gz++){
-  const cx=(gx+0.5)*35;
-  const cz=(gz+0.5)*35;
-  if(Math.abs(cx)<27 && Math.abs(cz)<27) continue;
+  for(let gz=-3;gz<3;gz++){
+    const cx=(gx+0.5)*35;
+    const cz=(gz+0.5)*35;
 
-  for(let j=0;j<3;j++){
-   for(let k=0;k<3;k++){
-    const x=cx+(j-1)*8.5+(random()-.5)*2;
-    const z=cz+(k-1)*8.5+(random()-.5)*2;
-    const w=5+random()*2;
-    const d=5+random()*2;
-    const h=7+random()*28;
-    const color=buildingColors[Math.floor(random()*buildingColors.length)];
-    box(scene,x,h/2,z,w,h,d,mat(color));
+    // ترك منطقة البداية مفتوحة
+    if(Math.abs(cx)<27 && Math.abs(cz)<27)continue;
 
-    const windowRows=Math.floor(h/3);
-    for(let row=1;row<windowRows;row++){
-      for(let side=-1;side<=1;side++){
-        if(random()<0.3)continue;
-        box(scene,x+side*w*.25,row*3,z+d/2+.015,w*.12,.85,.035,glassMat,false);
-        box(scene,x+w/2+.015,row*3,z+side*d*.25,.035,.85,d*.12,glassMat,false);
+    for(let j=0;j<3;j++){
+      for(let k=0;k<3;k++){
+        const x=cx+(j-1)*8.5+(random()-.5)*2;
+        const z=cz+(k-1)*8.5+(random()-.5)*2;
+        const w=5+random()*2;
+        const d=5+random()*2;
+        const h=7+random()*28;
+
+        const color=buildingColors[
+          Math.floor(random()*buildingColors.length)
+        ];
+
+        box(scene,x,h/2,z,w,h,d,material(color));
+
+        buildingObstacles.push({
+          minX:x-w/2,
+          maxX:x+w/2,
+          minZ:z-d/2,
+          maxZ:z+d/2
+        });
+
+        // نوافذ المباني
+        const rows=Math.floor(h/3);
+
+        for(let row=1;row<rows;row++){
+          for(let side=-1;side<=1;side++){
+            if(random()<0.3)continue;
+
+            box(
+              scene,x+side*w*.25,row*3,z+d/2+.02,
+              w*.12,.85,.04,glassMat,false
+            );
+
+            box(
+              scene,x+w/2+.02,row*3,z+side*d*.25,
+              .04,.85,d*.12,glassMat,false
+            );
+          }
+        }
+
+        if(h>22){
+          box(scene,x,h+.35,z,1.2,.7,1.2,material(0x657481));
+        }
       }
     }
-    if(h>22)box(scene,x,h+0.35,z,1.2,.7,1.2,mat(0x657481));
-   }
   }
- }
 }
 
-// Trees placed along some road sections.
-const trunkMat=mat(0x72503a);
-const leafMat=mat(0x357b4d);
+// أشجار للزينة
+const trunkMat=material(0x72503a);
+const leafMat=material(0x357b4d);
+
 for(let i=-8;i<=8;i++){
- for(const side of [-1,1]){
-  const x=i*20;
-  const z=side*10;
-  if(Math.abs(x)<30)continue;
-  box(scene,x,1.1,z,.65,2.2,.65,trunkMat);
-  const crown=new THREE.Mesh(new THREE.SphereGeometry(2.3,7,6),leafMat);
-  crown.position.set(x,3.5,z);
-  crown.castShadow=true;
-  scene.add(crown);
- }
-}
+  for(const side of [-1,1]){
+    const x=i*20;
+    const z=side*10;
 
-function makeCar(color=0xd94343){
- const car=new THREE.Group();
- box(car,0,.65,0,2.1,.8,4,mat(color));
- box(car,0,1.25,-.25,1.65,.8,2.1,glassMat);
- box(car,0,1.25,-.25,1.72,.08,2.2,mat(0x343c48));
- for(const x of [-1.08,1.08]){
-  for(const z of [-1.25,1.25]){
-   const wheel=new THREE.Mesh(
-    new THREE.CylinderGeometry(.42,.42,.24,16),
-    mat(0x17191d)
-   );
-   wheel.rotation.z=Math.PI/2;
-   wheel.position.set(x,.4,z);
-   wheel.castShadow=true;
-   car.add(wheel);
+    if(Math.abs(x)<30)continue;
+
+    box(scene,x,1.1,z,.65,2.2,.65,trunkMat);
+
+    const crown=new THREE.Mesh(
+      new THREE.SphereGeometry(2.3,7,6),leafMat
+    );
+
+    crown.position.set(x,3.5,z);
+    crown.castShadow=true;
+    scene.add(crown);
   }
-  box(car,x,.72,1.99,.32,.2,.05,mat(0xffefbd),false);
-  box(car,x,.72,-2,.32,.2,.05,mat(0xf34432),false);
- }
- scene.add(car);
- return car;
 }
 
+// إنشاء سيارة
+function makeCar(){
+  const car=new THREE.Group();
+
+  box(car,0,.65,0,2.1,.8,4,material(0xd94343));
+  box(car,0,1.25,-.25,1.65,.8,2.1,glassMat);
+  box(car,0,1.25,-.25,1.72,.08,2.2,material(0x343c48));
+
+  for(const x of [-1.08,1.08]){
+    for(const z of [-1.25,1.25]){
+      const wheel=new THREE.Mesh(
+        new THREE.CylinderGeometry(.42,.42,.24,16),
+        material(0x17191d)
+      );
+
+      wheel.rotation.z=Math.PI/2;
+      wheel.position.set(x,.4,z);
+      wheel.castShadow=true;
+      car.add(wheel);
+    }
+
+    box(car,x,.72,1.99,.32,.2,.05,material(0xffefbd),false);
+    box(car,x,.72,-2,.32,.2,.05,material(0xf34432),false);
+  }
+
+  scene.add(car);
+  return car;
+}
+
+// الشخصية
 const player=new THREE.Group();
-const body= new THREE.Mesh(
- new THREE.CapsuleGeometry(.48,.9,4,8),
- mat(0x244fce)
+
+const body=new THREE.Mesh(
+  new THREE.CapsuleGeometry(.48,.9,4,8),
+  material(0x244fce)
 );
 body.position.y=1.15;
 body.castShadow=true;
 player.add(body);
 
 const head=new THREE.Mesh(
- new THREE.SphereGeometry(.3,12,10),
- mat(0xe8b58e)
+  new THREE.SphereGeometry(.3,12,10),
+  material(0xe8b58e)
 );
 head.position.y=1.95;
 head.castShadow=true;
@@ -237,166 +322,320 @@ player.position.set(0,0,0);
 const car=makeCar();
 car.position.set(5,0,5);
 
+// علامة المكافأة
 const reward=new THREE.Group();
+
 const coin=new THREE.Mesh(
- new THREE.TorusGeometry(1.1,.18,8,24),
- mat(0xffd34e,.3)
+  new THREE.TorusGeometry(1.1,.18,8,24),
+  material(0xffd34e,.3)
 );
 coin.position.y=2;
 reward.add(coin);
+
 const pillar=new THREE.Mesh(
- new THREE.CylinderGeometry(.12,.12,2,8),
- mat(0xffd34e)
+  new THREE.CylinderGeometry(.12,.12,2,8),
+  material(0xffd34e)
 );
 pillar.position.y=1;
 reward.add(pillar);
+
 reward.position.set(-12,0,-12);
 scene.add(reward);
 
+// حالة اللعبة
 let money=1000;
 let driving=false;
-let running=false;
 let started=false;
 let collected=false;
-let messageTimer;
+let messageTimer=null;
+
 const keys={};
 
+let verticalVelocity=0;
+let onGround=true;
+
+const gravity=22;
+const jumpStrength=8;
+const playerRadius=.7;
+
 function showMessage(text){
- message.textContent=text;
- message.style.display="block";
- clearTimeout(messageTimer);
- messageTimer=setTimeout(()=>message.style.display="none",2500);
+  message.textContent=text;
+  message.style.display="block";
+
+  clearTimeout(messageTimer);
+
+  messageTimer=setTimeout(()=>{
+    message.style.display="none";
+  },2400);
 }
 
-function toggleVehicle(){
- if(!driving){
-  if(player.position.distanceTo(car.position)<5){
-   driving=true;
-   player.visible=false;
-   showMessage("أنت الآن تقود السيارة!");
-  }else{
-   showMessage("اقترب من السيارة الحمراء أولاً.");
+// تصادم دائري مبسط مع حدود المباني
+function isBlocked(x,z){
+  for(const b of buildingObstacles){
+    const closestX=Math.max(b.minX,Math.min(x,b.maxX));
+    const closestZ=Math.max(b.minZ,Math.min(z,b.maxZ));
+
+    const dx=x-closestX;
+    const dz=z-closestZ;
+
+    if(dx*dx+dz*dz<playerRadius*playerRadius){
+      return true;
+    }
   }
- }else{
-  driving=false;
-  player.visible=true;
-  player.position.copy(car.position);
-  player.position.x+=3;
-  showMessage("خرجت من السيارة.");
- }
- modeLabel.textContent=driving?"قيادة":"استكشاف";
+
+  return false;
+}
+
+// اختبار المحورين منفصلين للسماح بالحركة بمحاذاة الجدران
+function movePlayerWithCollision(dx,dz){
+  const nextX=player.position.x+dx;
+  const nextZ=player.position.z+dz;
+
+  if(!isBlocked(nextX,player.position.z)){
+    player.position.x=nextX;
+  }
+
+  if(!isBlocked(player.position.x,nextZ)){
+    player.position.z=nextZ;
+  }
+}
+
+// القفز
+function jumpPlayer(){
+  if(onGround && !driving && started){
+    verticalVelocity=jumpStrength;
+    onGround=false;
+  }
+}
+
+// الدخول إلى السيارة والخروج منها
+function toggleVehicle(){
+  if(!driving){
+    if(player.position.distanceTo(car.position)<5){
+      driving=true;
+      player.visible=false;
+      verticalVelocity=0;
+      onGround=true;
+      player.position.y=0;
+      showMessage("أنت الآن تقود السيارة!");
+    }else{
+      showMessage("اقترب من السيارة الحمراء أولًا.");
+    }
+  }else{
+    const exitX=car.position.x+Math.cos(car.rotation.y)*3;
+    const exitZ=car.position.z-Math.sin(car.rotation.y)*3;
+
+    if(!isBlocked(exitX,exitZ)){
+      driving=false;
+      player.visible=true;
+      player.position.set(exitX,0,exitZ);
+      player.rotation.y=car.rotation.y;
+      showMessage("خرجت من السيارة.");
+    }else{
+      showMessage("المكان بجانب السيارة غير مناسب للخروج.");
+    }
+  }
+
+  modeLabel.textContent=driving?"قيادة":"استكشاف";
+}
+
+// استخدام رمز المفتاح الفعلي حتى تعمل الحركة مع التخطيط العربي
+function normalizeKey(event){
+  const codeMap={
+    KeyW:"w",
+    KeyA:"a",
+    KeyS:"s",
+    KeyD:"d",
+    KeyE:"e",
+    ShiftLeft:"shift",
+    ShiftRight:"shift",
+    Space:"space",
+    ArrowUp:"w",
+    ArrowLeft:"a",
+    ArrowDown:"s",
+    ArrowRight:"d"
+  };
+
+  return codeMap[event.code] || event.key.toLowerCase();
 }
 
 function pressKey(key){
- key=key.toLowerCase();
- if(key==="e"){
-  if(!keys.e)toggleVehicle();
-  keys.e=true;
- }else{
+  if(key==="e"){
+    if(!keys.e)toggleVehicle();
+    keys.e=true;
+    return;
+  }
+
+  if(key==="space"){
+    if(!keys.space)jumpPlayer();
+    keys.space=true;
+    return;
+  }
+
   keys[key]=true;
- }
 }
-function releaseKey(key){keys[key.toLowerCase()]=false}
 
-addEventListener("keydown",e=>{
- const key=e.key.toLowerCase();
- if(["w","a","s","d","e","shift","arrowup","arrowdown","arrowleft","arrowright"," "].includes(key))e.preventDefault();
- if(key==="arrowup")pressKey("w");
- else if(key==="arrowdown")pressKey("s");
- else if(key==="arrowleft")pressKey("a");
- else if(key==="arrowright")pressKey("d");
- else pressKey(key);
-});
-addEventListener("keyup",e=>{
- const key=e.key.toLowerCase();
- releaseKey(key);
- if(key==="arrowup")releaseKey("w");
- if(key==="arrowdown")releaseKey("s");
- if(key==="arrowleft")releaseKey("a");
- if(key==="arrowright")releaseKey("d");
+function releaseKey(key){
+  keys[key]=false;
+}
+
+addEventListener("keydown",function(e){
+  const key=normalizeKey(e);
+
+  if(["w","a","s","d","e","shift","space"].includes(key)){
+    e.preventDefault();
+  }
+
+  pressKey(key);
 });
 
+addEventListener("keyup",function(e){
+  const key=normalizeKey(e);
+  releaseKey(key);
+});
+
+// أزرار الهاتف واللمس
 document.querySelectorAll("[data-key]").forEach(button=>{
- const key=button.dataset.key;
- const down=e=>{e.preventDefault();pressKey(key)};
- const up=e=>{e.preventDefault();releaseKey(key)};
- button.addEventListener("pointerdown",down);
- button.addEventListener("pointerup",up);
- button.addEventListener("pointercancel",up);
- button.addEventListener("pointerleave",up);
+  const key=button.dataset.key;
+
+  button.addEventListener("pointerdown",function(e){
+    e.preventDefault();
+
+    if(button.setPointerCapture){
+      try{button.setPointerCapture(e.pointerId)}catch(_){}
+    }
+
+    pressKey(key);
+  });
+
+  function release(e){
+    e.preventDefault();
+    releaseKey(key);
+  }
+
+  button.addEventListener("pointerup",release);
+  button.addEventListener("pointercancel",release);
+  button.addEventListener("lostpointercapture",()=>{
+    releaseKey(key);
+  });
 });
 
-document.getElementById("play").addEventListener("click",()=>{
- started=true;
- startScreen.style.display="none";
- showMessage("مرحباً بك في WorldRise! استكشف المدينة.");
+// بدء اللعبة
+document.getElementById("play").addEventListener("click",function(){
+  started=true;
+  startScreen.style.display="none";
+  showMessage("مرحبًا بك في WorldRise! استكشف المدينة.");
 });
 
-let lastTime=0;
-const direction=new THREE.Vector3();
+// حلقة اللعبة
 const cameraOffset=new THREE.Vector3(0,7,12);
-const clock=new THREE.Clock();
 
 function animate(){
- requestAnimationFrame(animate);
- const dt=Math.min(clock.getDelta(),.05);
- coin.rotation.y+=dt*1.6;
- reward.position.y=Math.sin(performance.now()*.002)*.15;
- reward.rotation.y+=dt*.5;
+  requestAnimationFrame(animate);
 
- if(started){
-  const actor=driving?car:player;
-  let forward=0,turn=0;
-  if(keys.w)forward+=1;
-  if(keys.s)forward-=1;
-  if(keys.a)turn+=1;
-  if(keys.d)turn-=1;
+  const dt=Math.min(clockDelta(),.04);
 
-  if(driving){
-   if(forward!==0){
-    car.position.x+=Math.sin(car.rotation.y)*forward*dt*15;
-    car.position.z+=Math.cos(car.rotation.y)*forward*dt*15;
-   }
-   car.rotation.y+=turn*dt*1.8*(forward===0?1:Math.sign(forward));
-  }else{
-   if(forward!==0||turn!==0){
-    if(forward!==0){
-     player.rotation.y=Math.atan2(turn===0?0:turn,forward);
-     player.position.x+=Math.sin(player.rotation.y)*forward*dt*(keys.shift?10:6);
-     player.position.z+=Math.cos(player.rotation.y)*forward*dt*(keys.shift?10:6);
+  coin.rotation.y+=dt*1.6;
+  reward.position.y=Math.sin(performance.now()*.002)*.15;
+  reward.rotation.y+=dt*.5;
+
+  if(started){
+    const actor=driving?car:player;
+
+    if(driving){
+      let forward=0;
+      let turn=0;
+
+      if(keys.w)forward+=1;
+      if(keys.s)forward-=1;
+      if(keys.a)turn+=1;
+      if(keys.d)turn-=1;
+
+      if(forward!==0){
+        car.position.x+=Math.sin(car.rotation.y)*forward*dt*15;
+        car.position.z+=Math.cos(car.rotation.y)*forward*dt*15;
+      }
+
+      car.rotation.y+=turn*dt*1.8*
+        (forward===0?1:Math.sign(forward));
+    }else{
+      // دوران الشخصية
+      if(keys.a)player.rotation.y+=dt*2.4;
+      if(keys.d)player.rotation.y-=dt*2.4;
+
+      let forward=0;
+
+      if(keys.w)forward+=1;
+      if(keys.s)forward-=1;
+
+      if(forward!==0){
+        const speed=keys.shift?10:6;
+
+        const dx=Math.sin(player.rotation.y)*forward*speed*dt;
+        const dz=Math.cos(player.rotation.y)*forward*speed*dt;
+
+        movePlayerWithCollision(dx,dz);
+      }
+
+      // الجاذبية والهبوط
+      if(!onGround){
+        verticalVelocity-=gravity*dt;
+        player.position.y+=verticalVelocity*dt;
+
+        if(player.position.y<=0){
+          player.position.y=0;
+          verticalVelocity=0;
+          onGround=true;
+        }
+      }
     }
-    if(turn!==0&&forward===0)player.rotation.y+=turn*dt*2.2;
-   }
+
+    // جمع المكافأة التجريبية
+    if(!collected && actor.position.distanceTo(reward.position)<3){
+      collected=true;
+      scene.remove(reward);
+      money+=1000;
+      moneyLabel.textContent=money;
+      showMessage("رائع! حصلت على 1000 دولار افتراضيًا.");
+    }
+
+    // كاميرا تتبع الشخصية أو السيارة
+    camera.position.lerp(
+      new THREE.Vector3(
+        actor.position.x+Math.sin(actor.rotation.y)*cameraOffset.z,
+        actor.position.y+cameraOffset.y,
+        actor.position.z+Math.cos(actor.rotation.y)*cameraOffset.z
+      ),
+      1-Math.pow(.001,dt)
+    );
+
+    camera.lookAt(
+      actor.position.x,
+      actor.position.y+1,
+      actor.position.z
+    );
   }
 
-  if(!collected && actor.position.distanceTo(reward.position)<3){
-   collected=true;
-   scene.remove(reward);
-   money+=1000;
-   moneyLabel.textContent=money;
-   showMessage("رائع! حصلت على مكافأة 1000 دولار تجريبية.");
-  }
-
-  direction.copy(actor.position);
-  camera.position.lerp(
-   new THREE.Vector3(
-    actor.position.x+Math.sin(actor.rotation.y)*cameraOffset.z,
-    actor.position.y+cameraOffset.y,
-    actor.position.z+Math.cos(actor.rotation.y)*cameraOffset.z
-   ),1-Math.pow(.001,dt)
-  );
-  camera.lookAt(actor.position.x,actor.position.y+1,actor.position.z);
- }
-
- renderer.render(scene,camera);
+  renderer.render(scene,camera);
 }
+
+let previousTime=performance.now();
+
+function clockDelta(){
+  const now=performance.now();
+  const delta=(now-previousTime)/1000;
+  previousTime=now;
+  return delta;
+}
+
 animate();
 
-addEventListener("resize",()=>{
- camera.aspect=innerWidth/innerHeight;
- camera.updateProjectionMatrix();
- renderer.setSize(innerWidth,innerHeight);
- renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));
+addEventListener("resize",function(){
+  camera.aspect=innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
 });
 })();
 </script>
