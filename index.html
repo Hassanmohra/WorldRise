@@ -88,23 +88,56 @@ const moneyLabel=$("money"),modeLabel=$("mode");
 const characterStatus=$("characterStatus"),modelInfo=$("modelInfo"),loading=$("loading");
 
 const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x9cc9e8);
-scene.fog=new THREE.Fog(0x9cc9e8,100,340);
 
-const camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,650);
-const renderer=new THREE.WebGLRenderer({antialias:false,powerPreference:"low-power",stencil:false,depth:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,.85));
-renderer.setSize(innerWidth,innerHeight);
-renderer.shadowMap.enabled=false;
-renderer.outputColorSpace=THREE.SRGBColorSpace;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.15;
+/* WORLD RISE — MOBILE VISUAL QUALITY */
+
+scene.background = new THREE.Color(0x9fbdd2);
+scene.fog = new THREE.Fog(0x9fbdd2, 125, 310);
+
+const camera = new THREE.PerspectiveCamera(
+  65,
+  innerWidth / innerHeight,
+  0.1,
+  650
+);
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: false,
+  powerPreference: "low-power",
+  stencil: false,
+  depth: true
+});
+
+/* جودة تتكيف مع قدرة الهاتف */
+const mobileQuality = Math.min(
+  Math.max(window.devicePixelRatio || 1, 0.75),
+  1.15
+);
+
+renderer.setPixelRatio(mobileQuality);
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = false;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.12;
+
 game.appendChild(renderer.domElement);
 
-scene.add(new THREE.HemisphereLight(0xdceeff,0x586044,2.1));
-const sun=new THREE.DirectionalLight(0xffefcf,2.1);
-sun.position.set(-55,100,45);
+/* إضاءة نهارية أكثر طبيعية */
+const ambientLight = new THREE.HemisphereLight(
+  0xe3efff,
+  0x555347,
+  1.8
+);
+scene.add(ambientLight);
+
+const sun = new THREE.DirectionalLight(
+  0xffe3bd,
+  2.4
+);
+sun.position.set(-55, 100, 45);
 scene.add(sun);
+
 
 function mat(color,roughness=.88,metalness=0){
  return new THREE.MeshStandardMaterial({color,roughness,metalness});
@@ -123,7 +156,50 @@ function random(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
 function range(a,b){return a+random()*(b-a);}
 
 // الأرض والشوارع
-const grass=mat(0x71935d),road=mat(0x30343a),roadEdge=mat(0x20252b);
+
+/* Procedural asphalt texture — no external image needed */
+const asphaltCanvas = document.createElement("canvas");
+asphaltCanvas.width = 128;
+asphaltCanvas.height = 128;
+
+const asphaltCtx = asphaltCanvas.getContext("2d");
+asphaltCtx.fillStyle = "#30343a";
+asphaltCtx.fillRect(0, 0, 128, 128);
+
+/* Tiny aggregate speckles */
+for (let i = 0; i < 1800; i++) {
+  const shade = 42 + Math.floor(Math.random() * 45);
+  const alpha = 0.12 + Math.random() * 0.2;
+
+  asphaltCtx.fillStyle =
+    `rgba(${shade},${shade},${shade},${alpha})`;
+
+  const size = Math.random() * 1.4 + 0.3;
+
+  asphaltCtx.fillRect(
+    Math.random() * 128,
+    Math.random() * 128,
+    size,
+    size
+  );
+}
+
+const asphaltTexture = new THREE.CanvasTexture(asphaltCanvas);
+asphaltTexture.wrapS = THREE.RepeatWrapping;
+asphaltTexture.wrapT = THREE.RepeatWrapping;
+asphaltTexture.repeat.set(5, 5);
+asphaltTexture.colorSpace = THREE.SRGBColorSpace;
+asphaltTexture.anisotropy = Math.min(
+  4,
+  renderer.capabilities.getMaxAnisotropy()
+);
+
+const grass = mat(0x71835d);
+const road = mat(0x30343a, 0.98);
+road.map = asphaltTexture;
+road.needsUpdate = true;
+
+const roadEdge = mat(0x252a30);
 const sidewalk=mat(0xb8b8ad),sidewalkLight=mat(0xd2d0c5);
 const whiteLine=mat(0xf4f0dd),yellowLine=mat(0xf1c84c);
 const crosswalkMat=mat(0xf4f3e9),drainMat=mat(0x454a4d);
