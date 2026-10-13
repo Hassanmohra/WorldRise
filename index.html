@@ -256,6 +256,49 @@ const concrete=mat(0x898b86,.92),balconyMetal=mat(0x454b4e,.7,.1);
 const roofMaterial=mat(0x73736d,.95),acMaterial=mat(0x8b9699,.8,.05);
 const tankMaterial=mat(0xa5afb0,.75,.04);
 const shopColors=[mat(0x435b88),mat(0x35715d),mat(0x986044),mat(0x70518a)];
+  
+/* WORLD RISE — Reusable shop sign textures */
+const shopSignLabels = [
+  { title: "MARKET", subtitle: "SUPERMARKET", color: "#245746" },
+  { title: "CAFE", subtitle: "COFFEE & MORE", color: "#75442e" },
+  { title: "SHOP", subtitle: "DAILY NEEDS", color: "#334f82" },
+  { title: "FOOD", subtitle: "FRESH & TASTY", color: "#873d36" }
+];
+
+const shopSignMaterials = shopSignLabels.map((item) => {
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 128;
+
+  const ctx = canvas.getContext("2d");
+
+  ctx.fillStyle = item.color;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#f7f0df";
+  ctx.fillRect(0, 0, canvas.width, 7);
+  ctx.fillRect(0, canvas.height - 7, canvas.width, 7);
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  ctx.font = "bold 48px Arial";
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(item.title, 256, 51);
+
+  ctx.font = "bold 20px Arial";
+  ctx.fillStyle = "#e5e8e5";
+  ctx.fillText(item.subtitle, 256, 94);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+
+  return new THREE.MeshBasicMaterial({
+    map: texture,
+    side: THREE.FrontSide
+  });
+});
+
 
 function addFrontWindow(building,x,y,z,w,h){
  box(building,x,y,z,w,h,.07,darkGlass);
@@ -300,6 +343,25 @@ for(let gx=-4;gx<4;gx++){
     box(building,0,1.4,d/2+.10,shopWidth,1.72,.10,shopGlass);
     box(building,0,1.4,d/2+.17,.065,1.7,.07,balconyMetal);
     box(building,0,2.43,d/2+.14,shopWidth+.3,.34,.16,signMaterial);
+     
+/* Textured storefront sign */
+const signIndex = Math.floor(
+  random() * shopSignMaterials.length
+);
+
+const signFace = new THREE.Mesh(
+  new THREE.PlaneGeometry(shopWidth, 0.30),
+  shopSignMaterials[signIndex]
+);
+
+signFace.position.set(
+  0,
+  2.43,
+  d / 2 + 0.226
+);
+
+building.add(signFace);
+
     box(building,0,2.62,d/2+.16,shopWidth+.38,.06,.17,lightStone);
     const doorX=w*.39;
     box(building,doorX,1.04,d/2+.09,.48,2.08,.10,darkGlass);
