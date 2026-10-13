@@ -293,6 +293,254 @@ for(let p=-4;p<=4;p++){
  }
 }
 
+  
+/* WORLD RISE — CITY LIFE UPDATE */
+const lifeBenchWood = mat(0x8a5a37);
+const lifeMetal = mat(0x454d53);
+const lifePlanter = mat(0xaaa79a);
+const lifeGreens = [
+  mat(0x397447),
+  mat(0x50834a),
+  mat(0x2f693d)
+];
+const lifeFlowers = [
+  mat(0xe7b5c8),
+  mat(0xf0d16b),
+  mat(0xf1eee0),
+  mat(0xc5b8f0)
+];
+
+function addCityBench(x, z, rotation = 0) {
+  const g = new THREE.Group();
+  g.position.set(x, 0.18, z);
+  g.rotation.y = rotation;
+  scene.add(g);
+
+  box(g, 0, 0.34, 0, 1.7, 0.12, 0.48, lifeBenchWood);
+  box(g, 0, 0.72, -0.19, 1.7, 0.55, 0.1, lifeBenchWood);
+
+  for (const px of [-0.62, 0.62]) {
+    box(g, px, 0.16, 0, 0.09, 0.35, 0.1, lifeMetal);
+    box(g, px, 0.48, -0.16, 0.08, 0.65, 0.08, lifeMetal);
+  }
+}
+
+function addCityFlowerBed(x, z, rotation = 0) {
+  const g = new THREE.Group();
+  g.position.set(x, 0, z);
+  g.rotation.y = rotation;
+  scene.add(g);
+
+  box(g, 0, 0.12, 0, 1.8, 0.24, 0.85, lifePlanter);
+
+  for (let i = 0; i < 7; i++) {
+    const px = -0.62 + i * 0.205;
+    const pz = range(-0.2, 0.2);
+
+    cylinder(g, px, 0.43, pz, 0.025, 0.035, 0.36, trunkMat, 5);
+
+    const leaf = new THREE.Mesh(
+      new THREE.SphereGeometry(0.14, 6, 5),
+      lifeGreens[Math.floor(random() * lifeGreens.length)]
+    );
+    leaf.position.set(px, 0.45, pz);
+    leaf.scale.y = 0.6;
+    g.add(leaf);
+
+    const flower = new THREE.Mesh(
+      new THREE.SphereGeometry(0.12, 6, 5),
+      lifeFlowers[Math.floor(random() * lifeFlowers.length)]
+    );
+    flower.position.set(px, 0.63, pz);
+    g.add(flower);
+  }
+}
+
+function addCityBush(x, z, scale = 1) {
+  const g = new THREE.Group();
+  g.position.set(x, 0.2, z);
+  g.scale.setScalar(scale);
+  scene.add(g);
+
+  for (let i = 0; i < 4; i++) {
+    const bush = new THREE.Mesh(
+      new THREE.SphereGeometry(0.43, 7, 6),
+      lifeGreens[Math.floor(random() * lifeGreens.length)]
+    );
+    bush.position.set(
+      range(-0.3, 0.3),
+      range(0.15, 0.45),
+      range(-0.25, 0.25)
+    );
+    g.add(bush);
+  }
+}
+
+/* توزيع أثاث الشوارع */
+for (let x = -105; x <= 105; x += 35) {
+  for (let z = -105; z <= 105; z += 35) {
+    if (random() < 0.7) {
+      addCityBench(x + 10.5, z + 2, Math.PI / 2);
+    }
+
+    if (random() < 0.8) {
+      addCityFlowerBed(x - 10.4, z - 1, Math.PI / 2);
+    }
+
+    if (random() < 0.8) {
+      addCityBush(x + 10.2, z - 5, range(0.75, 1.05));
+    }
+  }
+}
+
+/* مشاة متحركون */
+const cityPedestrians = [];
+const peopleShirts = [
+  mat(0x3568a8),
+  mat(0xb95d45),
+  mat(0x3e8065),
+  mat(0x8b68a8),
+  mat(0xd0a84d)
+];
+const peoplePants = [
+  mat(0x303946),
+  mat(0x454c57),
+  mat(0x6b6257)
+];
+const peopleSkin = mat(0xc88f6b);
+const peopleHair = mat(0x302a28);
+
+function addPedestrian(x, z, axis, direction) {
+  const g = new THREE.Group();
+  g.position.set(x, 0, z);
+  scene.add(g);
+
+  box(
+    g, 0, 1.22, 0, 0.43, 0.62, 0.25,
+    peopleShirts[Math.floor(random() * peopleShirts.length)]
+  );
+
+  const head = new THREE.Mesh(
+    new THREE.SphereGeometry(0.16, 7, 6),
+    peopleSkin
+  );
+  head.position.y = 1.68;
+  g.add(head);
+
+  const hair = new THREE.Mesh(
+    new THREE.SphereGeometry(
+      0.165, 7, 5, 0, Math.PI * 2, 0, Math.PI * 0.55
+    ),
+    peopleHair
+  );
+  hair.position.y = 1.73;
+  g.add(hair);
+
+  const arms = [];
+  const legs = [];
+
+  for (const side of [-1, 1]) {
+    const arm = new THREE.Group();
+    arm.position.set(side * 0.27, 1.43, 0);
+    g.add(arm);
+
+    const sleeve = new THREE.Mesh(
+      new THREE.CapsuleGeometry(0.065, 0.28, 2, 5),
+      peopleShirts[Math.floor(random() * peopleShirts.length)]
+    );
+    sleeve.position.y = -0.18;
+    arm.add(sleeve);
+    arms.push({ mesh: arm, side });
+
+    const leg = new THREE.Group();
+    leg.position.set(side * 0.12, 0.91, 0);
+    g.add(leg);
+
+    const limb = new THREE.Mesh(
+      new THREE.CapsuleGeometry(0.075, 0.32, 2, 5),
+      peoplePants[Math.floor(random() * peoplePants.length)]
+    );
+    limb.position.y = -0.2;
+    leg.add(limb);
+    legs.push({ mesh: leg, side });
+  }
+
+  g.rotation.y =
+    axis === "x"
+      ? (direction > 0 ? Math.PI / 2 : -Math.PI / 2)
+      : (direction > 0 ? 0 : Math.PI);
+
+  cityPedestrians.push({
+    group: g,
+    axis,
+    direction,
+    speed: range(0.65, 1.15),
+    arms,
+    legs,
+    phase: range(0, Math.PI * 2)
+  });
+}
+
+/* عدد معتدل للمحافظة على أداء الأجهزة */
+for (let i = 0; i < 16; i++) {
+  const lane = Math.floor(random() * 7 - 3) * 35;
+  const axis = random() < 0.5 ? "x" : "z";
+  const direction = random() < 0.5 ? 1 : -1;
+  const along = range(-135, 135);
+
+  const x = axis === "x"
+    ? along
+    : lane + (random() < 0.5 ? -1 : 1) * 9.2;
+
+  const z = axis === "z"
+    ? along
+    : lane + (random() < 0.5 ? -1 : 1) * 9.2;
+
+  addPedestrian(x, z, axis, direction);
+}
+
+/* سحب متحركة */
+const cityClouds = [];
+const cityCloudMaterial = new THREE.MeshBasicMaterial({
+  color: 0xffffff,
+  transparent: true,
+  opacity: 0.72,
+  depthWrite: false
+});
+
+function addCityCloud(x, y, z, scale) {
+  const cloud = new THREE.Group();
+  cloud.position.set(x, y, z);
+  cloud.scale.setScalar(scale);
+  scene.add(cloud);
+
+  const puffs = [
+    [0, 0, 0, 2.7],
+    [1.8, 0.25, 0.1, 2.1],
+    [-1.7, 0.05, 0, 1.8],
+    [0.5, 0.8, 0, 1.7]
+  ];
+
+  for (const [px, py, pz, radius] of puffs) {
+    const puff = new THREE.Mesh(
+      new THREE.SphereGeometry(radius, 8, 6),
+      cityCloudMaterial
+    );
+    puff.position.set(px, py, pz);
+    cloud.add(puff);
+  }
+
+  cityClouds.push({
+    group: cloud,
+    speed: range(0.7, 1.5)
+  });
+}
+
+addCityCloud(-100, 54, -90, 1.6);
+addCityCloud(25, 62, -150, 1.25);
+addCityCloud(125, 56, 20, 1.45);
+addCityCloud(-145, 59, 125, 1.1);
+
 // أعمدة الإنارة والإشارات
 const poleMat=mat(0x4b545b,.6,.2);
 const lampMat=new THREE.MeshStandardMaterial({color:0xfff0c3,emissive:0xffd87b,emissiveIntensity:.35});
@@ -531,7 +779,45 @@ function animate(){
  lastRenderTime=now;
  const dt=Math.min((now-previousTime)/1000,.04);previousTime=now;
  if(mixer)mixer.update(dt);
- if(started)updateTraffic(dt);
+
+if (started) updateTraffic(dt);
+
+/* حركة السحب */
+for (const cloud of cityClouds) {
+  cloud.group.position.x += cloud.speed * dt;
+
+  if (cloud.group.position.x > 340) {
+    cloud.group.position.x = -340;
+  }
+}
+
+/* حركة المشاة وأطرافهم */
+for (const person of cityPedestrians) {
+  const g = person.group;
+  const swing = Math.sin(
+    now * 0.006 + person.phase
+  ) * 0.48;
+
+  for (const leg of person.legs) {
+    leg.mesh.rotation.x = swing * leg.side;
+  }
+
+  for (const arm of person.arms) {
+    arm.mesh.rotation.x = -swing * arm.side * 0.75;
+  }
+
+  if (person.axis === "x") {
+    g.position.x += person.direction * person.speed * dt;
+
+    if (g.position.x > 155) g.position.x = -155;
+    if (g.position.x < -155) g.position.x = 155;
+  } else {
+    g.position.z += person.direction * person.speed * dt;
+
+    if (g.position.z > 155) g.position.z = -155;
+    if (g.position.z < -155) g.position.z = 155;
+  }
+}
  coin.rotation.y+=dt*1.6;reward.position.y=Math.sin(now*.002)*.15;reward.rotation.y+=dt*.5;
 
  if(fallbackModel&&!driving&&player.children[0]){
